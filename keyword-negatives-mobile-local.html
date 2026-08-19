@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e14">
+<title>Negatives — Mobile</title>
+<style>
+:root{
+  --bg:#0a0e14; --panel:#11161f; --panel2:#161d29; --border:#212b3a;
+  --text:#d8dee9; --dim:#7d8899; --faint:#4a5568;
+  --amber:#f5a623; --amber-dim:#5c421a;
+  --green:#3fb950; --red:#f0564f; --blue:#58a6ff; --purple:#bc8cff;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:13px/1.45 var(--mono);overscroll-behavior:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:8px;outline:none}
+input:focus,select:focus{border-color:var(--amber)}
+#app{display:flex;flex-direction:column;height:100dvh}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:baseline;gap:8px;padding:10px 14px 8px;border-bottom:1px solid var(--border);flex:none}
+.hdr h1{font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--amber)}
+.hdr .sub{font-size:11px;color:var(--dim)}
+
+/* ── Panes / tabs ── */
+.pane{flex:1;min-height:0;display:none;flex-direction:column}
+.pane.on{display:flex}
+.tabbar{flex:none;display:flex;border-top:1px solid var(--border);background:var(--panel);padding-bottom:var(--safe-b)}
+.tabbar button{flex:1;padding:10px 2px 8px;font-size:11px;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:48px}
+.tabbar button.on{color:var(--amber)}
+.tabbar .badge{font-size:10px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:0 6px;min-width:18px;text-align:center}
+.tabbar button.on .badge{border-color:var(--amber-dim);color:var(--amber)}
+
+/* ── Toolbar (Select tab) ── */
+.toolbar{flex:none;padding:8px 10px;display:flex;gap:6px;border-bottom:1px solid var(--border);align-items:center}
+.toolbar input[type=search]{flex:1;min-width:0;padding:9px 10px;font-size:13px;border-radius:9px}
+.tbtn{flex:none;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:var(--dim);font-size:12px;min-height:38px}
+.tbtn.on{color:var(--amber);border-color:var(--amber-dim)}
+.statline{flex:none;padding:5px 12px;font-size:11px;color:var(--dim);border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;overflow-x:auto;white-space:nowrap}
+.statline b{color:var(--text);font-weight:600}
+.ngactive{color:var(--purple)}
+
+/* ── Virtual list ── */
+.vlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative}
+.vinner{position:relative;width:100%}
+.rowcard{position:absolute;left:0;right:0;height:64px;padding:7px 12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.rowcard:active{background:var(--panel)}
+.rowcard.blocked{opacity:.38}
+.rowcard.drafted{border-left:3px solid var(--amber);padding-left:9px}
+.rc-kw{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-kw .hl{color:var(--amber)}
+.rc-meta{font-size:10.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-nums{font-size:10.5px;color:var(--faint);display:flex;gap:10px}
+.rc-nums b{color:var(--dim);font-weight:600}
+.rc-src{color:var(--blue)}
+.emptymsg{padding:40px 24px;text-align:center;color:var(--dim);font-size:13px;line-height:1.7}
+
+/* ── Bottom sheets ── */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:none}
+.scrim.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--panel);border-top:1px solid var(--border);border-radius:16px 16px 0 0;max-height:88dvh;display:none;flex-direction:column;padding-bottom:calc(var(--safe-b) + 10px)}
+.sheet.on{display:flex}
+.sheet-grab{flex:none;width:38px;height:4px;border-radius:2px;background:var(--faint);margin:8px auto 4px}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 14px 8px}
+.sh-kwline{display:flex;align-items:flex-start;gap:8px;margin-bottom:2px}
+.sh-kw{font-size:15px;font-weight:700;flex:1;word-break:break-word}
+.sh-glink{flex:none;color:var(--blue);font-size:11px;border:1px solid var(--border);border-radius:7px;padding:4px 8px;text-decoration:none;margin-top:1px}
+.sh-meta{font-size:11px;color:var(--dim);margin-bottom:10px;word-break:break-word;line-height:1.6}
+.sh-label{font-size:10px;letter-spacing:.09em;color:var(--faint);text-transform:uppercase;margin:12px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:8px 13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:13px;min-height:38px;color:var(--text)}
+.chip.on{background:var(--amber-dim);border-color:var(--amber);color:var(--amber)}
+.chip.mchip.on{background:#1b3a5c;border-color:var(--blue);color:var(--blue)}
+.chip.all{color:var(--dim);font-style:italic}
+.tgl{padding:8px 14px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;color:var(--dim);min-height:38px}
+.tgl.on{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
+.sh-preview{margin-top:10px;font-size:12px;color:var(--purple);min-height:18px;word-break:break-word}
+.sh-actions{flex:none;display:flex;gap:8px;padding:10px 14px 0;border-top:1px solid var(--border)}
+.abtn{flex:1;padding:12px 8px;border-radius:10px;font-size:13px;font-weight:700;min-height:46px;border:1px solid var(--border);color:var(--dim)}
+.abtn.primary{background:var(--amber);color:#141414;border-color:var(--amber)}
+.abtn.primary:disabled{background:var(--amber-dim);color:#8a6c2f}
+.abtn.match{color:var(--blue);border-color:#1b3a5c}
+.abtn.match:disabled{color:#33517a;border-color:#16283f}
+.abtn:disabled{cursor:default}
+
+/* ── Ngram / filter sheets ── */
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg .tgl{flex:none}
+.nglist{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.ngchip{padding:7px 11px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;min-height:36px}
+.ngchip small{color:var(--faint);margin-left:5px}
+.ngchip.on{border-color:var(--purple);color:var(--purple);background:#2b1d47}
+
+/* ── Section lists (Files / Negatives / Same Words) ── */
+.scrollpane{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px calc(12px + var(--safe-b))}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.card-h{display:flex;align-items:center;gap:8px;padding:11px 12px;border-bottom:1px solid var(--border)}
+.card-h .name{flex:1;min-width:0;font-weight:700;font-size:12.5px;word-break:break-all}
+.card-h .cnt{flex:none;font-size:11px;color:var(--dim)}
+.dl{flex:none;padding:7px 11px;border:1px solid var(--amber-dim);color:var(--amber);border-radius:8px;font-size:11.5px;min-height:34px}
+.dl:disabled{color:var(--faint);border-color:var(--border)}
+.xbtn{flex:none;color:var(--red);font-size:15px;padding:4px 9px;min-height:34px}
+.itemrow{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px}
+.itemrow:last-child{border-bottom:none}
+.itemrow .main{flex:1;min-width:0;word-break:break-word}
+.itemrow .kw{font-weight:600}
+.itemrow .sub{color:var(--dim);font-size:10.5px}
+.tag{font-size:9.5px;padding:1px 6px;border:1px solid var(--border);border-radius:6px;color:var(--dim)}
+.tag.ex{color:var(--red);border-color:#4a2321}.tag.ph{color:var(--blue);border-color:#1b3a5c}.tag.br{color:var(--green);border-color:#1e4426}
+.more{width:100%;padding:10px;color:var(--dim);font-size:11.5px}
+.note{font-size:11px;color:var(--dim);line-height:1.7;padding:4px 2px 12px}
+.upl{display:block;border:1px dashed var(--faint);border-radius:12px;padding:26px 14px;text-align:center;color:var(--dim);font-size:13px;margin-bottom:14px}
+.upl b{color:var(--amber)}
+.upl input{display:none}
+.dangerbtn{color:var(--red);border:1px solid #4a2321;border-radius:9px;padding:9px 12px;font-size:12px;width:100%;min-height:42px}
+
+/* ── Toast ── */
+#toast{position:fixed;left:50%;bottom:calc(76px + var(--safe-b));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--amber-dim);color:var(--amber);padding:9px 16px;border-radius:10px;font-size:12.5px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr"><h1>NEGATIVES</h1><span class="sub" id="hdrSub">no files loaded</span></div>
+
+  <!-- SELECT -->
+  <div class="pane" id="pane-select">
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search keywords…" autocomplete="off" autocapitalize="off">
+      <button class="tbtn" id="btnNgram">N-gram</button>
+      <button class="tbtn" id="btnFilter">Filter</button>
+    </div>
+    <div class="statline" id="statline"></div>
+    <div class="vlist" id="vlist"><div class="vinner" id="vinner"></div></div>
+  </div>
+
+  <!-- NEGATIVES -->
+  <div class="pane" id="pane-negatives"><div class="scrollpane" id="negPane"></div></div>
+
+  <!-- SAME WORDS -->
+  <div class="pane" id="pane-same"><div class="scrollpane" id="samePane"></div></div>
+
+  <!-- FILES -->
+  <div class="pane" id="pane-files"><div class="scrollpane" id="filesPane"></div></div>
+
+  <div class="tabbar">
+    <button data-tab="select" class="on">Select<span class="badge" id="bSelect">0</span></button>
+    <button data-tab="negatives">Negatives<span class="badge" id="bNeg">0</span></button>
+    <button data-tab="same">Same Words<span class="badge" id="bSame">0</span></button>
+    <button data-tab="files">Files<span class="badge" id="bFiles">0</span></button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- Row selection sheet -->
+<div class="sheet" id="rowSheet">
+  <div class="sheet-grab"></div>
+  <div class="sheet-body" id="rowSheetBody"></div>
+  <div class="sh-actions">
+    <button class="abtn primary" id="btnAddNeg">+ Negative</button>
+    <button class="abtn match" id="btnAddSame">+ Same Words</button>
+    <button class="abtn" id="btnClearDraft">Clear</button>
+  </div>
+</div>
+
+<!-- Ngram sheet -->
+<div class="sheet" id="ngSheet">
+  <div class="sheet-grab"></div>
+  <div class="sheet-body">
+    <div class="sh-label">N-gram mode</div>
+    <div class="seg">
+      <button class="tgl" data-ngmode="1">1-gram</button>
+      <button class="tgl" data-ngmode="2">2-gram</button>
+      <select id="ngSort" style="padding:8px 10px;border-radius:9px;margin-left:auto">
+        <option value="impressions">by Impr</option>
+        <option value="count">by Count</option>
+        <option value="cost">by Cost</option>
+        <option value="clicks">by Clicks</option>
+        <option value="conversions">by Conv</option>
+      </select>
+    </div>
+    <div class="sh-label">Tap to filter rows (OR logic) <button id="ngClear" style="color:var(--red);font-size:11px;margin-left:8px">clear</button></div>
+    <div class="nglist" id="ngList"></div>
+  </div>
+</div>
+
+<!-- Filter sheet -->
+<div class="sheet" id="fltSheet">
+  <div class="sheet-grab"></div>
+  <div class="sheet-body">
+    <div class="sh-label">Source files</div>
+    <div class="chips" id="fltSrc"></div>
+    <div class="sh-label">Accounts</div>
+    <div class="chips" id="fltAcct"></div>
+    <div class="sh-label">Minimum impressions</div>
+    <div class="seg" id="fltImpr">
+      <button class="tgl" data-minimpr="0">All</button>
+      <button class="tgl" data-minimpr="10">≥10</button>
+      <button class="tgl" data-minimpr="50">≥50</button>
+      <button class="tgl" data-minimpr="100">≥100</button>
+      <button class="tgl" data-minimpr="500">≥500</button>
+    </div>
+    <div class="sh-label">Sort</div>
+    <div class="seg" id="fltSort">
+      <button class="tgl" data-sort="impr">Impr</button>
+      <button class="tgl" data-sort="conv">Conv</button>
+      <button class="tgl" data-sort="cost">Cost</button>
+      <button class="tgl" data-sort="clicks">Clicks</button>
+      <button class="tgl" data-sort="kw">A–Z</button>
+    </div>
+    <div class="sh-label">Hide rows already blocked by committed negatives</div>
+    <div class="seg"><button class="tgl" id="fltHideBlocked">Hide blocked</button></div>
+    <div style="height:8px"></div>
+    <button class="dangerbtn" id="fltReset">Reset all filters</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ════════════════ CSV parser (quoted fields, CRLF) ════════════════ */
+function parseCSVText(text){
+  const rows=[]; let row=[], field='', inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else inQ=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQ=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+      else if(c==='\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  while(rows.length && rows[rows.length-1].every(v=>v==='')) rows.pop();
+  if(!rows.length) return [];
+  const headers=rows[0].map(h=>h.trim());
+  return rows.slice(1).map(r=>{
+    const o={};
+    for(let i=0;i<headers.length;i++) o[headers[i]]=r[i]??'';
+    return o;
+  });
+}
+
+/* ════════════════ Negatives engine (ported from negativesEngine.js) ════════════════ */
+function tokenize(input){ return (input||'').toLowerCase().match(/[a-z0-9]+/g)||[]; }
+function tokenCounts(t){ const c={}; for(const x of t) c[x]=(c[x]||0)+1; return c; }
+function countsEqual(a,b){ const k=new Set([...Object.keys(a),...Object.keys(b)]); for(const x of k) if((a[x]||0)!==(b[x]||0)) return false; return true; }
+function exactMatch(n,q){ if(n.length!==q.length) return false; for(let i=0;i<n.length;i++) if(n[i]!==q[i]) return false; return true; }
+function phraseMatch(n,q){
+  if(n.length>q.length) return false;
+  for(let s=0;s<=q.length-n.length;s++){ let ok=true; for(let o=0;o<n.length;o++) if(q[s+o]!==n[o]){ok=false;break;} if(ok) return true; }
+  return false;
+}
+function broadMatch(n,q){
+  if(n.length>q.length) return false;
+  const t=tokenCounts(n);
+  for(let s=0;s<=q.length-n.length;s++) if(countsEqual(t,tokenCounts(q.slice(s,s+n.length)))) return true;
+  return false;
+}
+function matchesNegativeKeyword(neg,query,type){
+  const n=tokenize(neg); if(!n.length) return false;
+  const q=tokenize(query); if(!q.length) return false;
+  const t=(type||'Broad match').toLowerCase();
+  if(t==='exact match') return exactMatch(n,q);
+  if(t==='phrase match') return phraseMatch(n,q);
+  return broadMatch(n,q);
+}
+const norm=v=>String(v??'').trim().toLowerCase();
+function rowBlockedByNegatives(row,negs){
+  const queries=[String(row['Matched Keyword']??'').trim(),String(row['Negative keyword']??'').trim()].filter(Boolean);
+  if(!queries.length) return false;
+  const rc=norm(row['Customer ID']), rcam=norm(row['Campaign']), rag=norm(row['Ad group']);
+  return negs.some(neg=>{
+    const nc=norm(neg.customerId); if(!nc||nc!==rc) return false;
+    const ncam=norm(neg.campaign); if(ncam&&ncam!==rcam) return false;
+    const nag=norm(neg.adGroup); if(nag&&nag!==rag) return false;
+    return queries.some(q=>matchesNegativeKeyword(neg.negativeKeyword,q,neg.type));
+  });
+}
+/* Expansion is scoped to rows from the SAME SOURCE FILE only — keeps exports cleanly separated per import. */
+function expandNegatives(item,selRow,sameSourceRows){
+  const matchLabel=m=>m==='Phrase'?'Phrase match':m==='Exact'?'Exact match':'Broad match';
+  const type=matchLabel(item.match), text=item.text, out=[];
+  const cid=String(selRow['Customer ID']), camp=selRow['Campaign'], ag=selRow['Ad group'];
+  if(item.scope==='CAM'){
+    out.push({rowType:'Negative keyword',action:'Add',customerId:cid,campaign:camp,adGroup:'',negativeKeyword:text,type});
+  } else if(item.scope==='AG'){
+    const pairs=new Set();
+    for(const r of sameSourceRows) if(r['Ad group']===ag) pairs.add(String(r['Customer ID'])+'||'+r['Campaign']);
+    for(const key of pairs){ const [c,cm]=key.split('||');
+      out.push({rowType:'Negative keyword',action:'Add',customerId:c,campaign:cm,adGroup:ag,negativeKeyword:text,type}); }
+  } else {
+    const camps=new Set();
+    for(const r of sameSourceRows) if(String(r['Customer ID'])===cid) camps.add(r['Campaign']);
+    for(const cm of camps) out.push({rowType:'Negative keyword',action:'Add',customerId:cid,campaign:cm,adGroup:'',negativeKeyword:text,type});
+  }
+  return out;
+}
+function dedupeNegatives(existing,incoming){
+  const key=r=>[r.srcId,r.customerId,r.campaign,r.adGroup,r.negativeKeyword,r.type].join('|');
+  const seen=new Set(existing.map(key)); const add=[];
+  for(const r of incoming){ const k=key(r); if(seen.has(k)) continue; seen.add(k); add.push(r); }
+  return add;
+}
+function buildNgrams(rows,n){
+  const data=new Map();
+  for(const row of rows){
+    const tokens=row._tok; if(tokens.length<n) continue;
+    const seen=new Set();
+    for(let i=0;i<=tokens.length-n;i++){
+      const ng=n===1?tokens[i]:tokens[i]+' '+tokens[i+1];
+      if(seen.has(ng)) continue; seen.add(ng);
+      let d=data.get(ng);
+      if(!d){ d={ngram:ng,count:0,impressions:0,clicks:0,cost:0,conversions:0}; data.set(ng,d); }
+      d.count++; d.impressions+=row.impr||0; d.clicks+=row.clicks||0; d.cost+=row.cost||0; d.conversions+=row.conv||0;
+    }
+  }
+  return [...data.values()];
+}
+function textContainsNgram(tokens,ngTokens){
+  if(ngTokens.length===1) return tokens.includes(ngTokens[0]);
+  for(let i=0;i<=tokens.length-ngTokens.length;i++){
+    let ok=true;
+    for(let j=0;j<ngTokens.length;j++) if(tokens[i+j]!==ngTokens[j]){ok=false;break;}
+    if(ok) return true;
+  }
+  return false;
+}
+const splitWords=v=>(v||'').trim().split(/\s+/).filter(Boolean);
+const fmtSamePart=v=>v.trim().split(/\s+/).filter(Boolean).join('_');
+function triggerDownload(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+const csvEsc=v=>{ const s=String(v??''); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+
+/* ════════════════ State ════════════════ */
+const LS_KEY='neg-mobile-v1';
+const S={
+  sources:[],            // {id,name,addedAt,rowCount}
+  rows:[],               // parsed rows + derived fields
+  negatives:[],          // {srcId,customerId,campaign,adGroup,negativeKeyword,type,rowType,action}
+  sameWords:[],          // {srcId,left,right}
+  drafts:{},             // rowId -> {neg:[],mw:[],match:null,scope:null}
+  ui:{tab:'select',search:'',srcOff:[],acctOff:[],minImpr:0,sort:'impr',dir:'desc',
+      ngMode:'1',ngSort:'impressions',activeNgrams:[],hideBlocked:false},
+  rowsPersisted:true
+};
+let srcSeq=1;
+
+function deriveRow(raw,srcId,idx){
+  const num=v=>{ if(v==null||v==='') return 0; const n=Number(String(v).replace(/[,$]/g,'')); return isNaN(n)?0:n; };
+  const kw=raw['Negative keyword']||'';
+  const acct=raw['Account Name']||raw['Account name']||String(raw['Campaign']||'').split('_')[0]||'';
+  return {...raw,_id:srcId+'_'+idx,_src:srcId,_acct:acct,
+    impr:num(raw['Impressions']??raw['Impr.']??raw['Impr']),
+    conv:num(raw['Conversions']??raw['Conv.']??raw['Conv']),
+    clicks:num(raw['Clicks']),cost:num(raw['Cost']),
+    _kwLower:kw.toLowerCase(),_tok:tokenize(kw),_words:splitWords(kw),
+    _mwords:splitWords(raw['Matched Keyword']||'')};
+}
+
+/* Persistence: negatives + same words always saved. Raw rows saved when they fit in localStorage. */
+function save(){
+  const base={sources:S.sources,negatives:S.negatives,sameWords:S.sameWords,ui:S.ui,srcSeq};
+  const rawRows=S.rows.map(r=>{ const o={}; for(const k in r) if(k[0]!=='_'&&!['impr','conv','clicks','cost'].includes(k)) o[k]=r[k]; o.__src=r._src; return o; });
+  try{ localStorage.setItem(LS_KEY,JSON.stringify({...base,rows:rawRows})); S.rowsPersisted=true; }
+  catch(e){
+    try{ localStorage.setItem(LS_KEY,JSON.stringify(base)); S.rowsPersisted=false; }
+    catch(e2){ /* storage unavailable — session-only */ }
+  }
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'null'); if(!d) return;
+    S.sources=d.sources||[]; S.negatives=d.negatives||[]; S.sameWords=d.sameWords||[];
+    S.ui={...S.ui,...(d.ui||{}),tab:'select'}; srcSeq=d.srcSeq||1;
+    if(d.rows&&d.rows.length){
+      const counters={};
+      S.rows=d.rows.map(r=>{ const src=r.__src; const {__src,...rest}=r;
+        counters[src]=(counters[src]||0); return deriveRow(rest,src,counters[src]++); });
+      S.rowsPersisted=true;
+    } else if(S.sources.length){ S.rowsPersisted=false; }
+  }catch(e){ /* corrupt state — start fresh */ }
+}
+
+/* ════════════════ Derived data ════════════════ */
+let filteredRows=[], blockedSet=new Set(), ngramList=[];
+function recompute(){
+  const q=S.ui.search.trim().toLowerCase();
+  const srcOff=new Set(S.ui.srcOff), acctOff=new Set(S.ui.acctOff);
+  const ngToks=S.ui.activeNgrams.map(n=>n.split(' '));
+  let rows=S.rows.filter(r=>{
+    if(srcOff.has(r._src)) return false;
+    if(acctOff.has(r._acct)) return false;
+    if(r.impr<S.ui.minImpr) return false;
+    if(q && !r._kwLower.includes(q) && !String(r['Campaign']||'').toLowerCase().includes(q)) return false;
+    if(ngToks.length && !ngToks.some(t=>textContainsNgram(r._tok,t))) return false;
+    return true;
+  });
+  const k=S.ui.sort, dir=S.ui.dir==='asc'?1:-1;
+  rows.sort((a,b)=> k==='kw' ? a._kwLower.localeCompare(b._kwLower)*(dir*-1||1)
+                             : ((a[k]||0)-(b[k]||0))*dir );
+  // blocked detection against committed negatives (same source only)
+  blockedSet=new Set();
+  if(S.negatives.length){
+    const bySrc={};
+    for(const n of S.negatives) (bySrc[n.srcId]=bySrc[n.srcId]||[]).push(n);
+    for(const r of rows){ const negs=bySrc[r._src]; if(negs&&rowBlockedByNegatives(r,negs)) blockedSet.add(r._id); }
+  }
+  if(S.ui.hideBlocked&&blockedSet.size) rows=rows.filter(r=>!blockedSet.has(r._id));
+  filteredRows=rows;
+  ngramList=buildNgrams(rows,S.ui.ngMode==='2'?2:1).sort((a,b)=>b[S.ui.ngSort]-a[S.ui.ngSort]).slice(0,120);
+}
+
+/* ════════════════ Rendering ════════════════ */
+const $=id=>document.getElementById(id);
+const el=(tag,cls,txt)=>{ const e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; };
+const srcName=id=>{ const s=S.sources.find(x=>x.id===id); return s?s.name:id; };
+const srcShort=id=>srcName(id).replace(/\.csv$/i,'').slice(0,26);
+const fmt=n=>n.toLocaleString();
+const fmtC=n=>'$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),1900);
+}
+
+/* — Virtual list — */
+const ROW_H=64, OVERSCAN=12;
+const vlist=$('vlist'), vinner=$('vinner');
+let rendered=new Map();
+function renderVList(){
+  vinner.style.height=(filteredRows.length*ROW_H)+'px';
+  const st=vlist.scrollTop, h=vlist.clientHeight||600;
+  const start=Math.max(0,Math.floor(st/ROW_H)-OVERSCAN);
+  const end=Math.min(filteredRows.length,Math.ceil((st+h)/ROW_H)+OVERSCAN);
+  const want=new Set();
+  for(let i=start;i<end;i++) want.add(i);
+  for(const [i,node] of rendered) if(!want.has(i)){ node.remove(); rendered.delete(i); }
+  const q=S.ui.search.trim().toLowerCase();
+  for(let i=start;i<end;i++){
+    if(rendered.has(i)) continue;
+    const r=filteredRows[i];
+    const card=el('div','rowcard');
+    if(blockedSet.has(r._id)) card.classList.add('blocked');
+    const d=S.drafts[r._id]; if(d&&(d.neg.length||d.mw.length)) card.classList.add('drafted');
+    card.style.top=(i*ROW_H)+'px';
+    const kwEl=el('div','rc-kw');
+    const kw=r['Negative keyword']||'';
+    if(q&&r._kwLower.includes(q)){
+      const at=r._kwLower.indexOf(q);
+      kwEl.append(kw.slice(0,at)); kwEl.append(el('span','hl',kw.slice(at,at+q.length))); kwEl.append(kw.slice(at+q.length));
+    } else kwEl.textContent=kw;
+    card.append(kwEl);
+    card.append(el('div','rc-meta',r._acct+' · '+(r['Campaign']||'')+(r['Ad group']?' · '+r['Ad group']:'')));
+    const nums=el('div','rc-nums');
+    nums.innerHTML='<span><b>'+fmt(r.impr)+'</b> impr</span><span><b>'+fmt(r.conv)+'</b> conv</span><span><b>'+fmt(r.clicks)+'</b> clk</span>'+
+      (S.sources.length>1?'<span class="rc-src">'+srcShort(r._src)+'</span>':'');
+    card.append(nums);
+    card.addEventListener('click',()=>openRowSheet(r._id));
+    vinner.appendChild(card); rendered.set(i,card);
+  }
+  if(!filteredRows.length&&!vinner.querySelector('.emptymsg')){
+    const m=el('div','emptymsg', S.rows.length ? 'No rows match. Broaden the search or filters.' :
+      (S.sources.length&&!S.rowsPersisted ? 'Rows aren\u2019t stored between sessions (file too large). Re-upload on the Files tab \u2014 committed negatives are saved.' :
+      'No data loaded. Add Candidate-Negatives CSV files on the Files tab.'));
+    vinner.appendChild(m);
+  }
+}
+let vRaf=null;
+vlist.addEventListener('scroll',()=>{ if(vRaf) return; vRaf=requestAnimationFrame(()=>{ vRaf=null; renderVList(); }); },{passive:true});
+
+function renderStatline(){
+  const sl=$('statline');
+  const parts=['<span><b>'+fmt(filteredRows.length)+'</b> rows</span>'];
+  if(blockedSet.size) parts.push('<span><b>'+fmt(blockedSet.size)+'</b> blocked</span>');
+  if(S.ui.activeNgrams.length) parts.push('<span class="ngactive">ngram: '+S.ui.activeNgrams.join(', ')+'</span>');
+  if(S.ui.minImpr) parts.push('<span>impr\u2265'+S.ui.minImpr+'</span>');
+  if(S.ui.srcOff.length||S.ui.acctOff.length) parts.push('<span>filters on</span>');
+  sl.innerHTML=parts.join('');
+}
+function renderBadges(){
+  $('bSelect').textContent=fmt(filteredRows.length);
+  $('bNeg').textContent=fmt(S.negatives.length);
+  $('bSame').textContent=fmt(S.sameWords.length);
+  $('bFiles').textContent=S.sources.length;
+  $('hdrSub').textContent=S.sources.length? S.sources.length+' file'+(S.sources.length>1?'s':'')+' · '+fmt(S.rows.length)+' rows':'no files loaded';
+}
+
+/* — Row sheet — */
+let sheetRowId=null;
+function getDraft(id){ return S.drafts[id]||(S.drafts[id]={neg:[],mw:[],match:null,scope:null}); }
+function openRowSheet(id){ sheetRowId=id; renderRowSheet(); showSheet('rowSheet'); }
+function renderRowSheet(){
+  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+  const d=getDraft(r._id);
+  const body=$('rowSheetBody'); body.innerHTML='';
+  const line=el('div','sh-kwline');
+  line.append(el('div','sh-kw',r['Negative keyword']||''));
+  const g=el('a','sh-glink','Google'); g.target='_blank'; g.rel='noopener';
+  g.href='https://www.google.com/search?q='+encodeURIComponent(r['Negative keyword']||'').replace(/%20/g,'+');
+  line.append(g); body.append(line);
+  body.append(el('div','sh-meta',r._acct+' · '+String(r['Customer ID']||'')+'\n'+(r['Campaign']||'')+(r['Ad group']?'\n'+r['Ad group']:'')+
+    '\n'+fmt(r.impr)+' impr · '+fmt(r.clicks)+' clk · '+fmt(r.conv)+' conv · '+fmtC(r.cost)+
+    (S.sources.length>1?'\nfile: '+srcShort(r._src):'')));
+
+  body.append(el('div','sh-label','Negative words — tap to select'));
+  const negChips=el('div','chips');
+  r._words.forEach(w=>{
+    const c=el('button','chip'+(d.neg.includes(w)?' on':''),w);
+    c.onclick=()=>{ d.neg=d.neg.includes(w)?d.neg.filter(x=>x!==w):[...d.neg,w];
+      if(!d.neg.length){d.match=null;d.scope=null;} renderRowSheet(); };
+    negChips.append(c);
+  });
+  if(r._words.length){
+    const all=el('button','chip all','all+');
+    const allOn=d.neg.length===r._words.length&&r._words.every(w=>d.neg.includes(w));
+    if(allOn) all.classList.add('on');
+    all.onclick=()=>{ d.neg=allOn?[]:[...r._words]; if(!d.neg.length){d.match=null;d.scope=null;} renderRowSheet(); };
+    negChips.append(all);
+  }
+  body.append(negChips);
+
+  body.append(el('div','sh-label','Match type · scope'));
+  const seg=el('div','seg');
+  [['Exact','match'],['Phrase','match']].forEach(([v])=>{
+    const b=el('button','tgl'+(d.match===v?' on':''),v);
+    b.onclick=()=>{ d.match=d.match===v?null:v; renderRowSheet(); }; seg.append(b);
+  });
+  const brNote=el('span',null,''); brNote.style.cssText='color:var(--faint);font-size:10.5px;align-self:center';
+  brNote.textContent=d.match?'':'(none = Broad)'; seg.append(brNote);
+  const spacer=el('span'); spacer.style.flex='1'; seg.append(spacer);
+  [['CAM','Campaign'],['AG','Ad group']].forEach(([v,label])=>{
+    const b=el('button','tgl'+(d.scope===v?' on':''),label);
+    b.onclick=()=>{ d.scope=d.scope===v?null:v; renderRowSheet(); }; seg.append(b);
+  });
+  body.append(seg);
+  const scopeNote=el('div','note'); scopeNote.style.paddingTop='6px';
+  scopeNote.textContent=d.scope==='CAM'?'Applies to this campaign only.':d.scope==='AG'?'Applies to this ad group across its campaigns (this file).':'No scope = all campaigns for this customer (this file).';
+  body.append(scopeNote);
+
+  if(r._mwords.length){
+    body.append(el('div','sh-label','Matched keyword words — for Same Words'));
+    const mChips=el('div','chips');
+    r._mwords.forEach(w=>{
+      const c=el('button','chip mchip'+(d.mw.includes(w)?' on':''),w);
+      c.onclick=()=>{ d.mw=d.mw.includes(w)?d.mw.filter(x=>x!==w):[...d.mw,w]; renderRowSheet(); };
+      mChips.append(c);
+    });
+    const allOn=d.mw.length===r._mwords.length&&r._mwords.every(w=>d.mw.includes(w));
+    const all=el('button','chip mchip all'+(allOn?' on':''),'all+');
+    all.onclick=()=>{ d.mw=allOn?[]:[...r._mwords]; renderRowSheet(); };
+    mChips.append(all);
+    body.append(mChips);
+  }
+
+  const pv=el('div','sh-preview');
+  if(d.neg.length){
+    pv.textContent='\u2192 '+d.neg.join(' ')+(d.match?' ['+d.match+']':' [Broad]')+(d.mw.length?'  :  '+d.mw.join(' '):'');
+  }
+  body.append(pv);
+
+  $('btnAddNeg').disabled=!d.neg.length;
+  $('btnAddSame').disabled=!(d.neg.length&&d.mw.length);
+}
+$('btnAddNeg').onclick=()=>{
+  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+  const d=getDraft(r._id); if(!d.neg.length) return;
+  const text=d.neg.join(' ').trim(); if(!text) return;
+  const item={text,match:d.match,scope:d.scope};
+  d.neg=[]; d.match=null; d.scope=null;
+  const sameSrc=S.rows.filter(x=>x._src===r._src);
+  const expanded=expandNegatives(item,r,sameSrc).map(n=>({...n,srcId:r._src}));
+  const added=dedupeNegatives(S.negatives,expanded);
+  S.negatives.push(...added);
+  save(); recompute(); refreshAll(); renderRowSheet();
+  toast('+'+added.length+' negative row'+(added.length!==1?'s':'')+' \u2192 '+srcShort(r._src));
+};
+$('btnAddSame').onclick=()=>{
+  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+  const d=getDraft(r._id);
+  const left=d.neg.join(' ').trim(), right=d.mw.join(' ').trim();
+  if(!left||!right) return;
+  const key=r._src+'||'+left+'||'+right;
+  if(!S.sameWords.some(p=>p.srcId+'||'+p.left+'||'+p.right===key)){
+    S.sameWords.push({srcId:r._src,left,right});
+    toast('+ same words pair');
+  } else toast('duplicate pair — skipped');
+  d.mw=[];
+  save(); refreshAll(); renderRowSheet();
+};
+$('btnClearDraft').onclick=()=>{ delete S.drafts[sheetRowId]; renderRowSheet(); };
+
+/* — Sheets plumbing — */
+function showSheet(id){ $('scrim').classList.add('on'); $(id).classList.add('on'); }
+function hideSheets(){
+  $('scrim').classList.remove('on');
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('on'));
+  recompute(); refreshAll();
+}
+$('scrim').onclick=hideSheets;
+
+/* — Ngram sheet — */
+$('btnNgram').onclick=()=>{ renderNgSheet(); showSheet('ngSheet'); };
+function renderNgSheet(){
+  document.querySelectorAll('[data-ngmode]').forEach(b=>b.classList.toggle('on',b.dataset.ngmode===S.ui.ngMode));
+  $('ngSort').value=S.ui.ngSort;
+  const list=$('ngList'); list.innerHTML='';
+  ngramList.forEach(n=>{
+    const on=S.ui.activeNgrams.includes(n.ngram);
+    const c=el('button','ngchip'+(on?' on':''));
+    c.innerHTML=n.ngram+'<small>'+fmt(n[S.ui.ngSort])+'</small>';
+    c.onclick=()=>{ S.ui.activeNgrams=on?S.ui.activeNgrams.filter(x=>x!==n.ngram):[...S.ui.activeNgrams,n.ngram];
+      save(); recompute(); renderNgSheet(); };
+    list.append(c);
+  });
+  if(!ngramList.length) list.append(el('div','note','No rows in view.'));
+}
+document.querySelectorAll('[data-ngmode]').forEach(b=>b.onclick=()=>{
+  S.ui.ngMode=b.dataset.ngmode; S.ui.activeNgrams=[]; save(); recompute(); renderNgSheet(); });
+$('ngSort').onchange=e=>{ S.ui.ngSort=e.target.value; save(); recompute(); renderNgSheet(); };
+$('ngClear').onclick=()=>{ S.ui.activeNgrams=[]; save(); recompute(); renderNgSheet(); };
+
+/* — Filter sheet — */
+$('btnFilter').onclick=()=>{ renderFltSheet(); showSheet('fltSheet'); };
+function renderFltSheet(){
+  const srcBox=$('fltSrc'); srcBox.innerHTML='';
+  S.sources.forEach(s=>{
+    const off=S.ui.srcOff.includes(s.id);
+    const c=el('button','chip'+(off?'':' on'),s.name.replace(/\.csv$/i,''));
+    c.onclick=()=>{ S.ui.srcOff=off?S.ui.srcOff.filter(x=>x!==s.id):[...S.ui.srcOff,s.id];
+      save(); recompute(); renderFltSheet(); };
+    srcBox.append(c);
+  });
+  if(!S.sources.length) srcBox.append(el('div','note','No files yet.'));
+  const accts=[...new Set(S.rows.map(r=>r._acct).filter(Boolean))].sort();
+  const aBox=$('fltAcct'); aBox.innerHTML='';
+  accts.forEach(a=>{
+    const off=S.ui.acctOff.includes(a);
+    const c=el('button','chip'+(off?'':' on'),a);
+    c.onclick=()=>{ S.ui.acctOff=off?S.ui.acctOff.filter(x=>x!==a):[...S.ui.acctOff,a];
+      save(); recompute(); renderFltSheet(); };
+    aBox.append(c);
+  });
+  if(!accts.length) aBox.append(el('div','note','—'));
+  document.querySelectorAll('[data-minimpr]').forEach(b=>b.classList.toggle('on',+b.dataset.minimpr===S.ui.minImpr));
+  document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('on',b.dataset.sort===S.ui.sort));
+  $('fltHideBlocked').classList.toggle('on',S.ui.hideBlocked);
+}
+document.querySelectorAll('[data-minimpr]').forEach(b=>b.onclick=()=>{
+  S.ui.minImpr=+b.dataset.minimpr; save(); recompute(); renderFltSheet(); });
+document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.sort;
+  if(S.ui.sort===k) S.ui.dir=S.ui.dir==='asc'?'desc':'asc';
+  else { S.ui.sort=k; S.ui.dir=k==='kw'?'asc':'desc'; }
+  save(); recompute(); renderFltSheet(); });
+$('fltHideBlocked').onclick=()=>{ S.ui.hideBlocked=!S.ui.hideBlocked; save(); recompute(); renderFltSheet(); };
+$('fltReset').onclick=()=>{
+  S.ui={...S.ui,search:'',srcOff:[],acctOff:[],minImpr:0,sort:'impr',dir:'desc',activeNgrams:[],hideBlocked:false};
+  $('search').value=''; save(); recompute(); renderFltSheet(); };
+
+/* — Negatives tab (grouped by source; export per source only) — */
+function renderNegPane(){
+  const p=$('negPane'); p.innerHTML='';
+  if(!S.negatives.length){ p.append(el('div','emptymsg','No negatives yet. Select words on a row in the Select tab, then tap + Negative.')); return; }
+  p.append(Object.assign(el('div','note'),{textContent:'Exports are separated per import file — each download only contains negatives built from that file\u2019s rows.'}));
+  const bySrc=new Map();
+  S.negatives.forEach((n,i)=>{ if(!bySrc.has(n.srcId)) bySrc.set(n.srcId,[]); bySrc.get(n.srcId).push({n,i}); });
+  for(const [srcId,items] of bySrc){
+    const card=el('div','card');
+    const h=el('div','card-h');
+    h.append(el('div','name',srcName(srcId).replace(/\.csv$/i,'')));
+    h.append(el('div','cnt',items.length+' rows'));
+    const dl=el('button','dl','\u2B07 CSV');
+    dl.onclick=()=>downloadNegativesFor(srcId);
+    h.append(dl); card.append(h);
+    const LIMIT=60;
+    const shown=card._exp?items:items.slice(0,LIMIT);
+    shown.forEach(({n,i})=>{
+      const row=el('div','itemrow');
+      const main=el('div','main');
+      main.append(el('span','kw',n.negativeKeyword),el('span',null,' '));
+      const t=n.type==='Exact match'?'ex':n.type==='Phrase match'?'ph':'br';
+      main.append(Object.assign(el('span','tag '+t),{textContent:n.type.replace(' match','')}));
+      main.append(el('div','sub',n.customerId+' · '+n.campaign+(n.adGroup?' · '+n.adGroup:'')));
+      row.append(main);
+      const x=el('button','xbtn','\u00D7');
+      x.onclick=()=>{ S.negatives.splice(i,1); save(); recompute(); refreshAll(); };
+      row.append(x); card.append(row);
+    });
+    if(items.length>LIMIT&&!card._exp){
+      const m=el('button','more','show all '+items.length+' \u2193');
+      m.onclick=()=>{ card._exp=true; renderNegPane(); };
+      card.append(m);
+    }
+    p.append(card);
+  }
+  const clr=el('button','dangerbtn','Clear all negatives');
+  clr.onclick=()=>{ if(confirm('Delete all committed negatives?')){ S.negatives=[]; save(); recompute(); refreshAll(); } };
+  p.append(clr);
+}
+function downloadNegativesFor(srcId){
+  const rows=S.negatives.filter(n=>n.srcId===srcId);
+  if(!rows.length) return;
+  const headers=['Row Type','Action','Customer ID','Campaign','Ad group','Negative keyword','Type'];
+  const csv=[headers.join(',')].concat(rows.map(r=>
+    [r.rowType,r.action,r.customerId,r.campaign,r.adGroup,r.negativeKeyword,r.type].map(csvEsc).join(','))).join('\n');
+  const base=srcName(srcId).replace(/\.csv$/i,'');
+  triggerDownload(new Blob([csv],{type:'text/csv;charset=utf-8'}),'negatives-'+base+'-'+new Date().toISOString().slice(0,10)+'.csv');
+}
+
+/* — Same Words tab (grouped by source; export per source) — */
+function renderSamePane(){
+  const p=$('samePane'); p.innerHTML='';
+  if(!S.sameWords.length){ p.append(el('div','emptymsg','No same-words pairs yet. In a row sheet, select negative words + matched-keyword words, then tap + Same Words.')); return; }
+  const bySrc=new Map();
+  S.sameWords.forEach((s,i)=>{ if(!bySrc.has(s.srcId)) bySrc.set(s.srcId,[]); bySrc.get(s.srcId).push({s,i}); });
+  for(const [srcId,items] of bySrc){
+    const card=el('div','card');
+    const h=el('div','card-h');
+    h.append(el('div','name',srcName(srcId).replace(/\.csv$/i,'')));
+    h.append(el('div','cnt',items.length+' pairs'));
+    const dl=el('button','dl','\u2B07 TXT');
+    dl.onclick=()=>{
+      const lines=items.map(({s},idx)=>{
+        const line='"'+fmtSamePart(s.left)+'" : "'+fmtSamePart(s.right)+'"';
+        return idx===items.length-1?line:line+',';
+      });
+      const base=srcName(srcId).replace(/\.csv$/i,'');
+      triggerDownload(new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'}),'same-words-'+base+'-'+new Date().toISOString().slice(0,10)+'.txt');
+    };
+    h.append(dl); card.append(h);
+    items.forEach(({s,i})=>{
+      const row=el('div','itemrow');
+      const main=el('div','main');
+      main.append(el('span','kw','"'+fmtSamePart(s.left)+'" : "'+fmtSamePart(s.right)+'"'));
+      row.append(main);
+      const x=el('button','xbtn','\u00D7');
+      x.onclick=()=>{ S.sameWords.splice(i,1); save(); refreshAll(); };
+      row.append(x); card.append(row);
+    });
+    p.append(card);
+  }
+}
+
+/* — Files tab — */
+function renderFilesPane(){
+  const p=$('filesPane'); p.innerHTML='';
+  const lab=el('label','upl');
+  lab.innerHTML='<b>Tap to add CSV files</b><br>Candidate-Negatives export format \u2014 any filename.<br>Multiple files combine in the Select view; exports stay separated per file.';
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='.csv,text/csv'; inp.multiple=true;
+  inp.addEventListener('change',e=>{ handleFiles([...e.target.files]); inp.value=''; });
+  lab.append(inp); p.append(lab);
+  if(S.sources.length&&!S.rowsPersisted&&!S.rows.length)
+    p.append(el('div','note','\u26A0 The row data from your previous session was too large to keep on-device. Re-upload the file(s) above to continue selecting \u2014 your committed negatives and same-words below are saved.'));
+  S.sources.forEach(s=>{
+    const card=el('div','card');
+    const h=el('div','card-h');
+    h.append(el('div','name',s.name));
+    const liveRows=S.rows.filter(r=>r._src===s.id).length;
+    h.append(el('div','cnt',(liveRows||s.rowCount)+' rows · '+S.negatives.filter(n=>n.srcId===s.id).length+' neg'));
+    const x=el('button','xbtn','\u00D7');
+    x.onclick=()=>{
+      if(!confirm('Remove "'+s.name+'" and its rows? Its committed negatives will be removed too.')) return;
+      S.sources=S.sources.filter(z=>z.id!==s.id);
+      S.rows=S.rows.filter(r=>r._src!==s.id);
+      S.negatives=S.negatives.filter(n=>n.srcId!==s.id);
+      S.sameWords=S.sameWords.filter(n=>n.srcId!==s.id);
+      S.ui.srcOff=S.ui.srcOff.filter(z=>z!==s.id);
+      save(); recompute(); refreshAll();
+    };
+    h.append(x); card.append(h); p.append(card);
+  });
+  p.append(Object.assign(el('div','note'),{textContent:'Everything runs on this device. Nothing is uploaded anywhere; exports download straight to your phone.'}));
+}
+async function handleFiles(files){
+  let added=0;
+  for(const f of files){
+    if(!/\.csv$/i.test(f.name)&&f.type!=='text/csv') continue;
+    try{
+      const text=await f.text();
+      const raw=parseCSVText(text);
+      const usable=raw.filter(r=>String(r['Negative keyword']||'').trim());
+      if(!usable.length){ toast('No "Negative keyword" column rows in '+f.name); continue; }
+      const id='s'+(srcSeq++);
+      S.sources.push({id,name:f.name,addedAt:Date.now(),rowCount:usable.length});
+      usable.forEach((r,i)=>S.rows.push(deriveRow(r,id,i)));
+      added++;
+    }catch(e){ toast('Failed to read '+f.name); }
+  }
+  if(added){ save(); recompute(); refreshAll(); toast('+'+added+' file'+(added>1?'s':'')+' loaded'); setTab('select'); }
+}
+
+/* — Tabs / refresh — */
+function setTab(t){
+  S.ui.tab=t;
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  ['select','negatives','same','files'].forEach(x=>$('pane-'+x).classList.toggle('on',x===t));
+  refreshAll();
+}
+document.querySelectorAll('.tabbar button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+function refreshAll(){
+  renderBadges();
+  if(S.ui.tab==='select'){ renderStatline(); rendered.forEach(n=>n.remove()); rendered.clear(); vinner.querySelectorAll('.emptymsg').forEach(n=>n.remove()); renderVList(); }
+  if(S.ui.tab==='negatives') renderNegPane();
+  if(S.ui.tab==='same') renderSamePane();
+  if(S.ui.tab==='files') renderFilesPane();
+}
+let searchT=null;
+$('search').addEventListener('input',e=>{
+  clearTimeout(searchT);
+  searchT=setTimeout(()=>{ S.ui.search=e.target.value; save(); recompute(); refreshAll(); },160);
+});
+window.addEventListener('resize',()=>{ if(S.ui.tab==='select') renderVList(); });
+
+/* — Boot — */
+load();
+$('search').value=S.ui.search||'';
+recompute();
+setTab(S.rows.length?'select':'files');
+</script>
+</body>
+</html>
