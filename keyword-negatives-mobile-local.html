@@ -41,48 +41,72 @@ input:focus,select:focus{border-color:var(--amber)}
 /* ── Toolbar (Select tab) ── */
 .toolbar{flex:none;padding:8px 10px;display:flex;gap:6px;border-bottom:1px solid var(--border);align-items:center}
 .toolbar input[type=search]{flex:1;min-width:0;padding:9px 10px;font-size:13px;border-radius:9px}
-.tbtn{flex:none;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:var(--dim);font-size:12px;min-height:38px}
+.tbtn{flex:none;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--pan2);background:var(--panel2);color:var(--dim);font-size:12px;min-height:38px}
 .tbtn.on{color:var(--amber);border-color:var(--amber-dim)}
 .statline{flex:none;padding:5px 12px;font-size:11px;color:var(--dim);border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;overflow-x:auto;white-space:nowrap}
 .statline b{color:var(--text);font-weight:600}
 .ngactive{color:var(--purple)}
+.statbtn{color:var(--dim);font-size:11px;padding:0;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+.statbtn b{color:var(--text)}
 
 /* ── Virtual list ── */
 .vlist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative}
 .vinner{position:relative;width:100%}
-.rowcard{position:absolute;left:0;right:0;height:64px;padding:7px 12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.rowcard{position:absolute;left:0;right:0;height:64px;padding:7px 12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px;overflow:hidden;background:var(--bg);
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;will-change:transform;z-index:2}
 .rowcard:active{background:var(--panel)}
 .rowcard.blocked{opacity:.38}
 .rowcard.drafted{border-left:3px solid var(--amber);padding-left:9px}
+.rowcard.open{background:var(--panel);border-left:3px solid var(--amber);padding-left:9px;border-bottom-color:transparent}
+.rowcard.sel{background:#14243c;border-left:3px solid var(--blue);padding-left:9px}
 .rc-kw{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rc-kw .hl{color:var(--amber)}
 .rc-meta{font-size:10.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rc-nums{font-size:10.5px;color:var(--faint);display:flex;gap:10px}
 .rc-nums b{color:var(--dim);font-weight:600}
 .rc-src{color:var(--blue)}
+.swipebg{position:absolute;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:flex-end;padding-right:16px;color:var(--green);font-weight:700;font-size:12.5px;background:#12281a;z-index:1;white-space:nowrap}
 .emptymsg{padding:40px 24px;text-align:center;color:var(--dim);font-size:13px;line-height:1.7}
 
-/* ── Bottom sheets ── */
+/* ── Inline expansion panel ── */
+.exp{position:absolute;left:0;right:0;background:var(--panel);border-left:3px solid var(--amber);border-bottom:1px solid var(--border);padding:8px 12px 10px 9px;z-index:5}
+.exp .sh-label{margin:9px 0 5px}
+.exp-meta{font-size:10.5px;color:var(--dim);line-height:1.55;word-break:break-word;padding-right:126px}
+.exp-nav{position:absolute;top:6px;right:10px;display:flex;gap:5px}
+.exp-nav button{border:1px solid var(--border);border-radius:7px;background:var(--panel2);color:var(--dim);font-size:13px;padding:4px 10px;min-height:30px}
+.exp-nav a{color:var(--blue);font-size:11px;border:1px solid var(--border);border-radius:7px;padding:5px 8px;text-decoration:none;align-self:center}
+.exp-actions{display:flex;gap:6px;margin-top:10px}
+.exp-actions .abtn{min-height:40px;padding:9px 6px;font-size:12.5px}
+.lastchip{border:1px dashed var(--faint);color:var(--purple);border-radius:9px;padding:7px 12px;font-size:12px;min-height:36px}
+
+/* ── Batch action bar (long-press multi-select) ── */
+#batchBar{position:fixed;left:0;right:0;bottom:calc(64px + var(--safe-b));z-index:30;background:var(--panel);border-top:2px solid var(--blue);padding:8px 12px 10px;display:none}
+#batchBar.on{display:block}
+.bb-top{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);margin-bottom:8px}
+.bb-top b{color:var(--blue);font-size:13px}
+.bb-top .lnk{color:var(--dim);text-decoration:underline;text-underline-offset:3px;font-size:11.5px}
+.bb-top .bbx{margin-left:auto;color:var(--red);font-size:16px;padding:2px 8px}
+.bb-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bb-row .tgl{min-height:38px}
+.bb-row .abtn{flex:1;min-height:42px;min-width:96px}
+.bb-note{color:var(--faint);font-size:10.5px;align-self:center}
+
+/* ── Bottom sheets (ngram / filter / impact) ── */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:none}
 .scrim.on{display:block}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--panel);border-top:1px solid var(--border);border-radius:16px 16px 0 0;max-height:88dvh;display:none;flex-direction:column;padding-bottom:calc(var(--safe-b) + 10px)}
 .sheet.on{display:flex}
 .sheet-grab{flex:none;width:38px;height:4px;border-radius:2px;background:var(--faint);margin:8px auto 4px}
 .sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 14px 8px}
-.sh-kwline{display:flex;align-items:flex-start;gap:8px;margin-bottom:2px}
-.sh-kw{font-size:15px;font-weight:700;flex:1;word-break:break-word}
-.sh-glink{flex:none;color:var(--blue);font-size:11px;border:1px solid var(--border);border-radius:7px;padding:4px 8px;text-decoration:none;margin-top:1px}
-.sh-meta{font-size:11px;color:var(--dim);margin-bottom:10px;word-break:break-word;line-height:1.6}
 .sh-label{font-size:10px;letter-spacing:.09em;color:var(--faint);text-transform:uppercase;margin:12px 0 6px}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{padding:8px 13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:13px;min-height:38px;color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:7px 12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:13px;min-height:36px;color:var(--text)}
 .chip.on{background:var(--amber-dim);border-color:var(--amber);color:var(--amber)}
 .chip.mchip.on{background:#1b3a5c;border-color:var(--blue);color:var(--blue)}
 .chip.all{color:var(--dim);font-style:italic}
-.tgl{padding:8px 14px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;color:var(--dim);min-height:38px}
+.tgl{padding:7px 12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;color:var(--dim);min-height:36px}
 .tgl.on{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
-.sh-preview{margin-top:10px;font-size:12px;color:var(--purple);min-height:18px;word-break:break-word}
-.sh-actions{flex:none;display:flex;gap:8px;padding:10px 14px 0;border-top:1px solid var(--border)}
+.sh-preview{margin-top:8px;font-size:12px;color:var(--purple);min-height:16px;word-break:break-word}
 .abtn{flex:1;padding:12px 8px;border-radius:10px;font-size:13px;font-weight:700;min-height:46px;border:1px solid var(--border);color:var(--dim)}
 .abtn.primary{background:var(--amber);color:#141414;border-color:var(--amber)}
 .abtn.primary:disabled{background:var(--amber-dim);color:#8a6c2f}
@@ -97,6 +121,14 @@ input:focus,select:focus{border-color:var(--amber)}
 .ngchip{padding:7px 11px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;min-height:36px}
 .ngchip small{color:var(--faint);margin-left:5px}
 .ngchip.on{border-color:var(--purple);color:var(--purple);background:#2b1d47}
+
+/* ── Impact sheet ── */
+.imp-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+.imp-table th{font-size:10px;letter-spacing:.07em;color:var(--faint);text-transform:uppercase;text-align:right;padding:5px 6px;border-bottom:1px solid var(--border);font-weight:600}
+.imp-table th:first-child,.imp-table td:first-child{text-align:left;padding-left:2px}
+.imp-table td{text-align:right;padding:6px;border-bottom:1px solid var(--border);color:var(--text)}
+.imp-table tr.pct td{color:var(--amber);border-bottom:none;font-size:11px;padding-top:2px}
+.imp-table td.lab{color:var(--dim)}
 
 /* ── Section lists (Files / Negatives / Same Words) ── */
 .scrollpane{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px calc(12px + var(--safe-b))}
@@ -116,14 +148,18 @@ input:focus,select:focus{border-color:var(--amber)}
 .tag.ex{color:var(--red);border-color:#4a2321}.tag.ph{color:var(--blue);border-color:#1b3a5c}.tag.br{color:var(--green);border-color:#1e4426}
 .more{width:100%;padding:10px;color:var(--dim);font-size:11.5px}
 .note{font-size:11px;color:var(--dim);line-height:1.7;padding:4px 2px 12px}
-.upl{display:block;border:1px dashed var(--faint);border-radius:12px;padding:26px 14px;text-align:center;color:var(--dim);font-size:13px;margin-bottom:14px}
+.upl{display:block;border:1px dashed var(--faint);border-radius:12px;padding:22px 14px;text-align:center;color:var(--dim);font-size:13px;margin-bottom:10px}
 .upl b{color:var(--amber)}
+.upl.repl{padding:13px 14px;border-style:solid;border-color:var(--border)}
+.upl.repl b{color:var(--blue)}
 .upl input{display:none}
 .dangerbtn{color:var(--red);border:1px solid #4a2321;border-radius:9px;padding:9px 12px;font-size:12px;width:100%;min-height:42px}
 
-/* ── Toast ── */
-#toast{position:fixed;left:50%;bottom:calc(76px + var(--safe-b));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--amber-dim);color:var(--amber);padding:9px 16px;border-radius:10px;font-size:12.5px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
-#toast.on{opacity:1}
+/* ── Toast (with undo) ── */
+#toast{position:fixed;left:50%;bottom:calc(76px + var(--safe-b));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--amber-dim);color:var(--amber);padding:9px 14px;border-radius:10px;font-size:12.5px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap;display:flex;gap:12px;align-items:center}
+#toast.on{opacity:1;pointer-events:auto}
+#toastUndo{color:var(--blue);font-weight:700;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;display:none}
+#toastUndo.on{display:inline}
 </style>
 </head>
 <body>
@@ -158,18 +194,23 @@ input:focus,select:focus{border-color:var(--amber)}
   </div>
 </div>
 
-<div class="scrim" id="scrim"></div>
-
-<!-- Row selection sheet -->
-<div class="sheet" id="rowSheet">
-  <div class="sheet-grab"></div>
-  <div class="sheet-body" id="rowSheetBody"></div>
-  <div class="sh-actions">
-    <button class="abtn primary" id="btnAddNeg">+ Negative</button>
-    <button class="abtn match" id="btnAddSame">+ Same Words</button>
-    <button class="abtn" id="btnClearDraft">Clear</button>
+<!-- Batch bar: long-press a row to enter multi-select; adds each row's FULL search term -->
+<div id="batchBar">
+  <div class="bb-top"><b id="bbCount">0</b><span>selected · full term as negative</span>
+    <button class="lnk" id="bbAll">all in view</button>
+    <button class="bbx" id="bbX">✕</button>
+  </div>
+  <div class="bb-row">
+    <button class="tgl" id="bbExact">Exact</button>
+    <button class="tgl" id="bbPhrase">Phrase</button>
+    <span class="bb-note" id="bbMatchNote">(none = Broad)</span>
+    <button class="tgl" id="bbCam">Campaign</button>
+    <button class="tgl" id="bbAg">Ad group</button>
+    <button class="abtn primary" id="bbAdd">Add</button>
   </div>
 </div>
+
+<div class="scrim" id="scrim"></div>
 
 <!-- Ngram sheet -->
 <div class="sheet" id="ngSheet">
@@ -223,7 +264,13 @@ input:focus,select:focus{border-color:var(--amber)}
   </div>
 </div>
 
-<div id="toast"></div>
+<!-- Impact sheet (excluded-by-negatives summary) -->
+<div class="sheet" id="impSheet">
+  <div class="sheet-grab"></div>
+  <div class="sheet-body" id="impBody"></div>
+</div>
+
+<div id="toast"><span id="toastMsg"></span><button id="toastUndo">UNDO</button></div>
 
 <script>
 'use strict';
@@ -254,10 +301,16 @@ function parseCSVText(text){
   });
 }
 
-/* ════════════════ Negatives engine (ported from negativesEngine.js) ════════════════ */
+/* ════════════════ Negatives engine ════════════════
+   Google Ads NEGATIVE keyword semantics (negatives never match close
+   variants / plurals / misspellings — token match is literal):
+   - Exact:  query is exactly the negative's terms, same order, no extras.
+   - Phrase: negative's terms appear in the query in the same order,
+             contiguous; extra words before/after are allowed.
+   - Broad:  EVERY term of the negative appears somewhere in the query,
+             in ANY order, NOT necessarily adjacent.                    */
 function tokenize(input){ return (input||'').toLowerCase().match(/[a-z0-9]+/g)||[]; }
 function tokenCounts(t){ const c={}; for(const x of t) c[x]=(c[x]||0)+1; return c; }
-function countsEqual(a,b){ const k=new Set([...Object.keys(a),...Object.keys(b)]); for(const x of k) if((a[x]||0)!==(b[x]||0)) return false; return true; }
 function exactMatch(n,q){ if(n.length!==q.length) return false; for(let i=0;i<n.length;i++) if(n[i]!==q[i]) return false; return true; }
 function phraseMatch(n,q){
   if(n.length>q.length) return false;
@@ -266,9 +319,9 @@ function phraseMatch(n,q){
 }
 function broadMatch(n,q){
   if(n.length>q.length) return false;
-  const t=tokenCounts(n);
-  for(let s=0;s<=q.length-n.length;s++) if(countsEqual(t,tokenCounts(q.slice(s,s+n.length)))) return true;
-  return false;
+  const need=tokenCounts(n), have=tokenCounts(q);
+  for(const w in need) if((have[w]||0)<need[w]) return false;
+  return true;
 }
 function matchesNegativeKeyword(neg,query,type){
   const n=tokenize(neg); if(!n.length) return false;
@@ -279,15 +332,19 @@ function matchesNegativeKeyword(neg,query,type){
   return broadMatch(n,q);
 }
 const norm=v=>String(v??'').trim().toLowerCase();
+/* Blocked = a committed negative would stop THIS search term (query only —
+   the Matched Keyword / bid keyword is deliberately not tested).
+   Scope: customerId must match; empty campaign = customer-wide,
+   empty ad group = campaign-wide. */
 function rowBlockedByNegatives(row,negs){
-  const queries=[String(row['Matched Keyword']??'').trim(),String(row['Negative keyword']??'').trim()].filter(Boolean);
-  if(!queries.length) return false;
+  const q=String(row['Negative keyword']??'').trim();
+  if(!q) return false;
   const rc=norm(row['Customer ID']), rcam=norm(row['Campaign']), rag=norm(row['Ad group']);
   return negs.some(neg=>{
     const nc=norm(neg.customerId); if(!nc||nc!==rc) return false;
     const ncam=norm(neg.campaign); if(ncam&&ncam!==rcam) return false;
     const nag=norm(neg.adGroup); if(nag&&nag!==rag) return false;
-    return queries.some(q=>matchesNegativeKeyword(neg.negativeKeyword,q,neg.type));
+    return matchesNegativeKeyword(neg.negativeKeyword,q,neg.type);
   });
 }
 /* Expansion is scoped to rows from the SAME SOURCE FILE only — keeps exports cleanly separated per import. */
@@ -357,11 +414,20 @@ const S={
   negatives:[],          // {srcId,customerId,campaign,adGroup,negativeKeyword,type,rowType,action}
   sameWords:[],          // {srcId,left,right}
   drafts:{},             // rowId -> {neg:[],mw:[],match:null,scope:null}
+  lastCombo:{match:null,scope:null},   // sticky last-used match/scope (swipe + one-tap reuse)
   ui:{tab:'select',search:'',srcOff:[],acctOff:[],minImpr:0,sort:'impr',dir:'desc',
       ngMode:'1',ngSort:'impressions',activeNgrams:[],hideBlocked:false},
   rowsPersisted:true
 };
 let srcSeq=1;
+
+const DERIVED=new Set(['_id','_src','_acct','impr','conv','clicks','cost','_kwLower','_tok','_words','_mwords']);
+/* Stable fingerprint of the raw CSV columns of a row — drops exact
+   duplicate rows across every loaded file (first occurrence wins). */
+function rawKey(obj){
+  const ks=Object.keys(obj).filter(k=>!DERIVED.has(k)&&k!=='__src').sort();
+  return ks.map(k=>k+'\u0001'+String(obj[k]??'')).join('\u0002');
+}
 
 function deriveRow(raw,srcId,idx){
   const num=v=>{ if(v==null||v==='') return 0; const n=Number(String(v).replace(/[,$]/g,'')); return isNaN(n)?0:n; };
@@ -375,57 +441,149 @@ function deriveRow(raw,srcId,idx){
     _mwords:splitWords(raw['Matched Keyword']||'')};
 }
 
-/* Persistence: negatives + same words always saved. Raw rows saved when they fit in localStorage. */
-function save(){
-  const base={sources:S.sources,negatives:S.negatives,sameWords:S.sameWords,ui:S.ui,srcSeq};
-  const rawRows=S.rows.map(r=>{ const o={}; for(const k in r) if(k[0]!=='_'&&!['impr','conv','clicks','cost'].includes(k)) o[k]=r[k]; o.__src=r._src; return o; });
-  try{ localStorage.setItem(LS_KEY,JSON.stringify({...base,rows:rawRows})); S.rowsPersisted=true; }
-  catch(e){
-    try{ localStorage.setItem(LS_KEY,JSON.stringify(base)); S.rowsPersisted=false; }
-    catch(e2){ /* storage unavailable — session-only */ }
-  }
+/* ════════════════ Persistence ════════════════
+   Split store: small meta (negatives, pairs, sources, ui) → localStorage,
+   written on every action (cheap). Row data → IndexedDB, written only on
+   import / remove / replace — async and non-blocking, with a far larger
+   quota than localStorage, so big files survive between sessions and no
+   interaction ever re-serializes the whole dataset.
+   NO sample data ships in this file — anything visible on load is your
+   own previous session restored from this device. */
+function idbOpen(){
+  return new Promise((res,rej)=>{
+    if(!window.indexedDB) return rej(new Error('no idb'));
+    const r=indexedDB.open('neg-mobile-db',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('kv');
+    r.onsuccess=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+  });
 }
-function load(){
+function idbPut(key,val){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const tx=db.transaction('kv','readwrite');
+    tx.objectStore('kv').put(val,key);
+    tx.oncomplete=()=>{db.close();res();};
+    tx.onerror=()=>{db.close();rej(tx.error);};
+  }));
+}
+function idbGet(key){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const tx=db.transaction('kv','readonly');
+    const rq=tx.objectStore('kv').get(key);
+    rq.onsuccess=()=>{db.close();res(rq.result);};
+    rq.onerror=()=>{db.close();rej(rq.error);};
+  }));
+}
+function idbDel(key){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const tx=db.transaction('kv','readwrite');
+    tx.objectStore('kv').delete(key);
+    tx.oncomplete=()=>{db.close();res();};
+    tx.onerror=()=>{db.close();rej(tx.error);};
+  })).catch(()=>{});
+}
+function save(){ /* meta only — never touches row data */
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(
+    {sources:S.sources,negatives:S.negatives,sameWords:S.sameWords,ui:S.ui,srcSeq,lastCombo:S.lastCombo}));
+  }catch(e){ /* storage unavailable — session-only */ }
+}
+function saveRows(){ /* async, only on import/remove/replace */
+  const rawRows=S.rows.map(r=>{ const o={}; for(const k in r) if(!DERIVED.has(k)) o[k]=r[k]; o.__src=r._src; return o; });
+  return idbPut('rows',rawRows).then(()=>{ S.rowsPersisted=true; })
+    .catch(()=>{ S.rowsPersisted=false; });
+}
+function hydrateRows(rawRows){
+  const counters={};
+  S.rows=rawRows.map(r=>{ const src=r.__src; const {__src,...rest}=r;
+    counters[src]=(counters[src]||0); return deriveRow(rest,src,counters[src]++); });
+}
+async function load(){
   try{
-    const d=JSON.parse(localStorage.getItem(LS_KEY)||'null'); if(!d) return;
-    S.sources=d.sources||[]; S.negatives=d.negatives||[]; S.sameWords=d.sameWords||[];
-    S.ui={...S.ui,...(d.ui||{}),tab:'select'}; srcSeq=d.srcSeq||1;
-    if(d.rows&&d.rows.length){
-      const counters={};
-      S.rows=d.rows.map(r=>{ const src=r.__src; const {__src,...rest}=r;
-        counters[src]=(counters[src]||0); return deriveRow(rest,src,counters[src]++); });
-      S.rowsPersisted=true;
-    } else if(S.sources.length){ S.rowsPersisted=false; }
-  }catch(e){ /* corrupt state — start fresh */ }
+    const d=JSON.parse(localStorage.getItem(LS_KEY)||'null');
+    if(d){
+      S.sources=d.sources||[]; S.negatives=d.negatives||[]; S.sameWords=d.sameWords||[];
+      S.ui={...S.ui,...(d.ui||{}),tab:'select'}; srcSeq=d.srcSeq||1;
+      S.lastCombo=d.lastCombo||{match:null,scope:null};
+      if(d.rows&&d.rows.length){          // legacy localStorage rows → migrate to IDB
+        hydrateRows(d.rows);
+        saveRows(); save();               // save() drops the rows key from LS
+        return;
+      }
+    }
+  }catch(e){ /* corrupt meta — start fresh */ }
+  try{
+    const rawRows=await idbGet('rows');
+    if(rawRows&&rawRows.length){ hydrateRows(rawRows); S.rowsPersisted=true; }
+    else if(S.sources.length){ S.rowsPersisted=false; }
+  }catch(e){ if(S.sources.length) S.rowsPersisted=false; }
+}
+function wipeAll(){
+  S.sources=[]; S.rows=[]; S.negatives=[]; S.sameWords=[]; S.drafts={};
+  S.lastCombo={match:null,scope:null};
+  S.ui={...S.ui,search:'',srcOff:[],acctOff:[],minImpr:0,activeNgrams:[],hideBlocked:false};
+  closeExpand(false); exitBatch(false); rowsVer++; negVer++; srcSeq=1;
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  idbDel('rows');
+  const s=document.getElementById('search'); if(s) s.value='';
 }
 
-/* ════════════════ Derived data ════════════════ */
+/* ════════════════ Derived data — cached, minimal recompute ════════════════
+   Per-keystroke work is filter-only:
+   - blocked map recomputed ONLY when negatives or rows change (negVer/rowsVer)
+   - sort order cached per (key, dir, rowsVer) — filters reuse it
+   - ngram aggregation moved out of the hot path; built lazily when the
+     N-gram sheet opens                                                     */
 let filteredRows=[], blockedSet=new Set(), ngramList=[];
-function recompute(){
-  const q=S.ui.search.trim().toLowerCase();
-  const srcOff=new Set(S.ui.srcOff), acctOff=new Set(S.ui.acctOff);
-  const ngToks=S.ui.activeNgrams.map(n=>n.split(' '));
-  let rows=S.rows.filter(r=>{
-    if(srcOff.has(r._src)) return false;
-    if(acctOff.has(r._acct)) return false;
-    if(r.impr<S.ui.minImpr) return false;
-    if(q && !r._kwLower.includes(q) && !String(r['Campaign']||'').toLowerCase().includes(q)) return false;
-    if(ngToks.length && !ngToks.some(t=>textContainsNgram(r._tok,t))) return false;
-    return true;
-  });
-  const k=S.ui.sort, dir=S.ui.dir==='asc'?1:-1;
-  rows.sort((a,b)=> k==='kw' ? a._kwLower.localeCompare(b._kwLower)*(dir*-1||1)
-                             : ((a[k]||0)-(b[k]||0))*dir );
-  // blocked detection against committed negatives (same source only)
-  blockedSet=new Set();
+let impact={all:null,blocked:null,bySrc:[]};
+let rowsVer=0, negVer=0;
+let blockedAll=new Map(), blockedNegVer=-1, blockedRowsVer=-1;
+function ensureBlocked(){
+  if(blockedNegVer===negVer&&blockedRowsVer===rowsVer) return;
+  blockedAll=new Map();
   if(S.negatives.length){
     const bySrc={};
     for(const n of S.negatives) (bySrc[n.srcId]=bySrc[n.srcId]||[]).push(n);
-    for(const r of rows){ const negs=bySrc[r._src]; if(negs&&rowBlockedByNegatives(r,negs)) blockedSet.add(r._id); }
+    for(const r of S.rows){ const negs=bySrc[r._src]; if(negs&&rowBlockedByNegatives(r,negs)) blockedAll.set(r._id,true); }
   }
-  if(S.ui.hideBlocked&&blockedSet.size) rows=rows.filter(r=>!blockedSet.has(r._id));
-  filteredRows=rows;
-  ngramList=buildNgrams(rows,S.ui.ngMode==='2'?2:1).sort((a,b)=>b[S.ui.ngSort]-a[S.ui.ngSort]).slice(0,120);
+  blockedNegVer=negVer; blockedRowsVer=rowsVer;
+}
+let sortCache={key:'',dir:'',ver:-1,arr:[]};
+function ensureSorted(){
+  const k=S.ui.sort, dir=S.ui.dir;
+  if(sortCache.key===k&&sortCache.dir===dir&&sortCache.ver===rowsVer) return sortCache.arr;
+  const d=dir==='asc'?1:-1;
+  const arr=S.rows.slice().sort((a,b)=> k==='kw' ? a._kwLower.localeCompare(b._kwLower)*(d*-1||1)
+                                                : ((a[k]||0)-(b[k]||0))*d );
+  sortCache={key:k,dir,ver:rowsVer,arr};
+  return arr;
+}
+function recompute(){
+  ensureBlocked();
+  const q=S.ui.search.trim().toLowerCase();
+  const srcOff=new Set(S.ui.srcOff), acctOff=new Set(S.ui.acctOff);
+  const ngToks=S.ui.activeNgrams.map(n=>n.split(' '));
+  const zero=()=>({rows:0,impr:0,clicks:0,conv:0,cost:0});
+  const acc=(t,r)=>{ t.rows++; t.impr+=r.impr; t.clicks+=r.clicks; t.conv+=r.conv; t.cost+=r.cost; };
+  const all=zero(), blk=zero(), srcMap=new Map();
+  blockedSet=new Set();
+  const out=[];
+  for(const r of ensureSorted()){
+    if(srcOff.has(r._src)) continue;
+    if(acctOff.has(r._acct)) continue;
+    if(r.impr<S.ui.minImpr) continue;
+    if(q && !r._kwLower.includes(q) && !String(r['Campaign']||'').toLowerCase().includes(q)) continue;
+    if(ngToks.length && !ngToks.some(t=>textContainsNgram(r._tok,t))) continue;
+    acc(all,r);
+    const isB=blockedAll.has(r._id);
+    if(isB){
+      blockedSet.add(r._id); acc(blk,r);
+      let t=srcMap.get(r._src); if(!t){ t=zero(); srcMap.set(r._src,t); } acc(t,r);
+      if(S.ui.hideBlocked) continue;
+    }
+    out.push(r);
+  }
+  impact={all,blocked:blk,bySrc:[...srcMap.entries()]};
+  filteredRows=out;
 }
 
 /* ════════════════ Rendering ════════════════ */
@@ -435,123 +593,284 @@ const srcName=id=>{ const s=S.sources.find(x=>x.id===id); return s?s.name:id; };
 const srcShort=id=>srcName(id).replace(/\.csv$/i,'').slice(0,26);
 const fmt=n=>n.toLocaleString();
 const fmtC=n=>'$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=(a,b)=>b?((a/b*100).toFixed(1)+'%'):'—';
+const comboLabel=c=>(c.match||'Broad')+' · '+(c.scope==='CAM'?'Campaign':c.scope==='AG'?'Ad group':'Customer');
 
 function toast(msg){
-  const t=$('toast'); t.textContent=msg; t.classList.add('on');
+  $('toastMsg').textContent=msg; $('toastUndo').classList.remove('on');
+  const t=$('toast'); t.classList.add('on');
   clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),1900);
 }
+function toastUndo(msg,fn){
+  $('toastMsg').textContent=msg;
+  const u=$('toastUndo'); u.classList.add('on');
+  u.onclick=()=>{ fn(); $('toast').classList.remove('on'); };
+  const t=$('toast'); t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),4200);
+}
 
-/* — Virtual list — */
+/* — Commit helper: push, sticky combo, undo — */
+function commitNegatives(added,combo,label){
+  if(!added.length){ toast('nothing new — already committed'); return; }
+  S.negatives.push(...added); negVer++;
+  if(combo) S.lastCombo={match:combo.match||null,scope:combo.scope||null};
+  save(); recompute(); refreshAll();
+  toastUndo('+'+added.length+' negative row'+(added.length!==1?'s':'')+(label?' \u2192 '+label:''),()=>{
+    const set=new Set(added);
+    S.negatives=S.negatives.filter(n=>!set.has(n)); negVer++;
+    save(); recompute(); refreshAll();
+  });
+}
+
+/* — Virtual list: fixed-height absolute rows, one inline expansion — */
 const ROW_H=64, OVERSCAN=12;
 const vlist=$('vlist'), vinner=$('vinner');
 let rendered=new Map();
+let expandedId=null, expandH=0, expPanel=null, expNeedCenter=false;
+
+function expIndex(){ return expandedId ? filteredRows.findIndex(r=>r._id===expandedId) : -1; }
+
 function renderVList(){
-  vinner.style.height=(filteredRows.length*ROW_H)+'px';
+  let expIdx=expIndex();
+  if(expandedId&&expIdx<0){ closeExpand(false); expIdx=-1; }
+  vinner.style.height=(filteredRows.length*ROW_H+(expIdx>=0?expandH:0))+'px';
   const st=vlist.scrollTop, h=vlist.clientHeight||600;
-  const start=Math.max(0,Math.floor(st/ROW_H)-OVERSCAN);
+  const pad=expIdx>=0?Math.ceil(expandH/ROW_H):0;
+  const start=Math.max(0,Math.floor(st/ROW_H)-OVERSCAN-pad);
   const end=Math.min(filteredRows.length,Math.ceil((st+h)/ROW_H)+OVERSCAN);
   const want=new Set();
   for(let i=start;i<end;i++) want.add(i);
-  for(const [i,node] of rendered) if(!want.has(i)){ node.remove(); rendered.delete(i); }
+  for(const [i,node] of rendered) if(!want.has(i)){ node.remove(); if(node._bg)node._bg.remove(); rendered.delete(i); }
   const q=S.ui.search.trim().toLowerCase();
+  const topOf=i=>i*ROW_H+(expIdx>=0&&i>expIdx?expandH:0);
   for(let i=start;i<end;i++){
-    if(rendered.has(i)) continue;
-    const r=filteredRows[i];
-    const card=el('div','rowcard');
-    if(blockedSet.has(r._id)) card.classList.add('blocked');
-    const d=S.drafts[r._id]; if(d&&(d.neg.length||d.mw.length)) card.classList.add('drafted');
-    card.style.top=(i*ROW_H)+'px';
-    const kwEl=el('div','rc-kw');
-    const kw=r['Negative keyword']||'';
-    if(q&&r._kwLower.includes(q)){
-      const at=r._kwLower.indexOf(q);
-      kwEl.append(kw.slice(0,at)); kwEl.append(el('span','hl',kw.slice(at,at+q.length))); kwEl.append(kw.slice(at+q.length));
-    } else kwEl.textContent=kw;
-    card.append(kwEl);
-    card.append(el('div','rc-meta',r._acct+' · '+(r['Campaign']||'')+(r['Ad group']?' · '+r['Ad group']:'')));
-    const nums=el('div','rc-nums');
-    nums.innerHTML='<span><b>'+fmt(r.impr)+'</b> impr</span><span><b>'+fmt(r.conv)+'</b> conv</span><span><b>'+fmt(r.clicks)+'</b> clk</span>'+
-      (S.sources.length>1?'<span class="rc-src">'+srcShort(r._src)+'</span>':'');
-    card.append(nums);
-    card.addEventListener('click',()=>openRowSheet(r._id));
-    vinner.appendChild(card); rendered.set(i,card);
+    let card=rendered.get(i);
+    if(!card){
+      const r=filteredRows[i];
+      card=el('div','rowcard'); card._rid=r._id;
+      if(blockedSet.has(r._id)) card.classList.add('blocked');
+      const d=S.drafts[r._id]; if(d&&(d.neg.length||d.mw.length)) card.classList.add('drafted');
+      if(r._id===expandedId) card.classList.add('open');
+      if(selSet.has(r._id)) card.classList.add('sel');
+      const kwEl=el('div','rc-kw');
+      const kw=r['Negative keyword']||'';
+      if(q&&r._kwLower.includes(q)){
+        const at=r._kwLower.indexOf(q);
+        kwEl.append(kw.slice(0,at)); kwEl.append(el('span','hl',kw.slice(at,at+q.length))); kwEl.append(kw.slice(at+q.length));
+      } else kwEl.textContent=kw;
+      card.append(kwEl);
+      card.append(el('div','rc-meta',r._acct+' · '+(r['Campaign']||'')+(r['Ad group']?' · '+r['Ad group']:'')));
+      const nums=el('div','rc-nums');
+      nums.innerHTML='<span><b>'+fmt(r.impr)+'</b> impr</span><span><b>'+fmt(r.conv)+'</b> conv</span><span><b>'+fmt(r.clicks)+'</b> clk</span>';
+      card.append(nums);
+      attachRowGestures(card,r);
+      vinner.appendChild(card); rendered.set(i,card);
+    }
+    card.style.top=topOf(i)+'px';
+    if(card._bg) card._bg.style.top=card.style.top;
   }
+  // expansion panel placement
+  if(expIdx>=0){
+    if(!expPanel){ expPanel=el('div','exp'); vinner.appendChild(expPanel); renderExpPanel(); }
+    expPanel.style.top=((expIdx+1)*ROW_H)+'px';
+    const hNow=expPanel.offsetHeight;
+    if(hNow&&hNow!==expandH){ expandH=hNow; renderVList(); return; }
+    if(expNeedCenter){ expNeedCenter=false; centerExpand(expIdx); }
+  } else if(expPanel){ expPanel.remove(); expPanel=null; }
   if(!filteredRows.length&&!vinner.querySelector('.emptymsg')){
     const m=el('div','emptymsg', S.rows.length ? 'No rows match. Broaden the search or filters.' :
-      (S.sources.length&&!S.rowsPersisted ? 'Rows aren\u2019t stored between sessions (file too large). Re-upload on the Files tab \u2014 committed negatives are saved.' :
+      (S.sources.length&&!S.rowsPersisted ? 'Rows from your last session couldn\u2019t be restored. Re-upload on the Files tab \u2014 committed negatives are saved.' :
       'No data loaded. Add Candidate-Negatives CSV files on the Files tab.'));
     vinner.appendChild(m);
   }
 }
+function centerExpand(expIdx){
+  const vh=vlist.clientHeight||600;
+  const block=ROW_H+expandH, rowTop=expIdx*ROW_H;
+  let target = block>=vh-20 ? rowTop-10 : rowTop-(vh-block)/2;
+  vlist.scrollTo({top:Math.max(0,target),behavior:'smooth'});
+}
+function toggleExpand(id){
+  if(expandedId===id){ closeExpand(true); return; }
+  expandedId=id; expandH=0; expNeedCenter=true;
+  if(expPanel){ expPanel.remove(); expPanel=null; }
+  rendered.forEach(n=>{ n.remove(); if(n._bg)n._bg.remove(); }); rendered.clear();
+  renderVList();
+}
+function closeExpand(rerender){
+  expandedId=null; expandH=0;
+  if(expPanel){ expPanel.remove(); expPanel=null; }
+  if(rerender){ rendered.forEach(n=>{ n.remove(); if(n._bg)n._bg.remove(); }); rendered.clear(); renderVList(); }
+}
 let vRaf=null;
 vlist.addEventListener('scroll',()=>{ if(vRaf) return; vRaf=requestAnimationFrame(()=>{ vRaf=null; renderVList(); }); },{passive:true});
 
-function renderStatline(){
-  const sl=$('statline');
-  const parts=['<span><b>'+fmt(filteredRows.length)+'</b> rows</span>'];
-  if(blockedSet.size) parts.push('<span><b>'+fmt(blockedSet.size)+'</b> blocked</span>');
-  if(S.ui.activeNgrams.length) parts.push('<span class="ngactive">ngram: '+S.ui.activeNgrams.join(', ')+'</span>');
-  if(S.ui.minImpr) parts.push('<span>impr\u2265'+S.ui.minImpr+'</span>');
-  if(S.ui.srcOff.length||S.ui.acctOff.length) parts.push('<span>filters on</span>');
-  sl.innerHTML=parts.join('');
+/* — Row gestures: tap = expand (or toggle in batch mode);
+     long-press = enter batch multi-select;
+     left-swipe = one-gesture quick add of the FULL term with last combo — */
+let selMode=false, selSet=new Set();
+const SWIPE_COMMIT=-72, LP_MS=420;
+function attachRowGestures(card,r){
+  let sx=0,sy=0,axis=null,dx=0,lpT=null,suppress=false;
+  const reset=()=>{ card.style.transform=''; if(card._bg){ card._bg.remove(); card._bg=null; } };
+  card.addEventListener('touchstart',e=>{
+    const t=e.touches[0]; sx=t.clientX; sy=t.clientY; axis=null; dx=0; suppress=false;
+    lpT=setTimeout(()=>{ lpT=null; suppress=true;
+      if(navigator.vibrate) navigator.vibrate(12);
+      enterBatch(r._id);
+    },LP_MS);
+  },{passive:true});
+  card.addEventListener('touchmove',e=>{
+    const t=e.touches[0]; dx=t.clientX-sx; const dy=t.clientY-sy;
+    if(axis===null&&(Math.abs(dx)>8||Math.abs(dy)>8)){
+      axis=Math.abs(dx)>Math.abs(dy)?'x':'y';
+      if(lpT){ clearTimeout(lpT); lpT=null; }
+    }
+    if(axis==='x'&&!selMode){
+      dx=Math.max(-120,Math.min(0,dx));
+      if(!card._bg){
+        const bg=el('div','swipebg','+ NEG · '+comboLabel(S.lastCombo));
+        bg.style.top=card.style.top; card._bg=bg;
+        vinner.insertBefore(bg,card);
+      }
+      card.style.transform='translateX('+dx+'px)';
+    }
+  },{passive:true});
+  card.addEventListener('touchend',()=>{
+    if(lpT){ clearTimeout(lpT); lpT=null; }
+    if(axis==='x'){
+      suppress=true;
+      if(dx<=SWIPE_COMMIT&&!selMode) quickAdd(r);
+      reset();
+    }
+    if(axis==='y') suppress=true;
+    setTimeout(()=>{ suppress=false; },50);
+    card._sup=suppress;
+  },{passive:true});
+  card.addEventListener('touchcancel',()=>{ if(lpT){ clearTimeout(lpT); lpT=null; } reset(); });
+  card.addEventListener('contextmenu',e=>{ e.preventDefault(); enterBatch(r._id); });  // desktop fallback
+  card.addEventListener('click',()=>{
+    if(card._sup){ card._sup=false; return; }
+    if(selMode){ toggleSel(r._id); return; }
+    toggleExpand(r._id);
+  });
 }
-function renderBadges(){
-  $('bSelect').textContent=fmt(filteredRows.length);
-  $('bNeg').textContent=fmt(S.negatives.length);
-  $('bSame').textContent=fmt(S.sameWords.length);
-  $('bFiles').textContent=S.sources.length;
-  $('hdrSub').textContent=S.sources.length? S.sources.length+' file'+(S.sources.length>1?'s':'')+' · '+fmt(S.rows.length)+' rows':'no files loaded';
+function quickAdd(r){
+  const text=(r['Negative keyword']||'').trim(); if(!text) return;
+  const item={text,match:S.lastCombo.match,scope:S.lastCombo.scope};
+  const sameSrc=S.rows.filter(x=>x._src===r._src);
+  const expanded=expandNegatives(item,r,sameSrc).map(n=>({...n,srcId:r._src}));
+  commitNegatives(dedupeNegatives(S.negatives,expanded),S.lastCombo,srcShort(r._src));
 }
 
-/* — Row sheet — */
-let sheetRowId=null;
+/* — Batch multi-select (long-press → contextual action bar) — */
+const batch={match:null,scope:null};
+function enterBatch(id){
+  closeExpand(false);
+  if(!selMode){ selMode=true; batch.match=S.lastCombo.match; batch.scope=S.lastCombo.scope; }
+  selSet.add(id);
+  renderBatchBar(); syncSelClasses();
+}
+function toggleSel(id){
+  if(selSet.has(id)) selSet.delete(id); else selSet.add(id);
+  if(!selSet.size){ exitBatch(true); return; }
+  renderBatchBar(); syncSelClasses();
+}
+function exitBatch(rerender){
+  selMode=false; selSet=new Set();
+  $('batchBar').classList.remove('on');
+  if(rerender) syncSelClasses();
+}
+function syncSelClasses(){
+  rendered.forEach(n=>n.classList.toggle('sel',selSet.has(n._rid)));
+}
+function renderBatchBar(){
+  $('batchBar').classList.add('on');
+  $('bbCount').textContent=fmt(selSet.size);
+  $('bbExact').classList.toggle('on',batch.match==='Exact');
+  $('bbPhrase').classList.toggle('on',batch.match==='Phrase');
+  $('bbMatchNote').textContent=batch.match?'':'(none = Broad)';
+  $('bbCam').classList.toggle('on',batch.scope==='CAM');
+  $('bbAg').classList.toggle('on',batch.scope==='AG');
+}
+$('bbExact').onclick=()=>{ batch.match=batch.match==='Exact'?null:'Exact'; renderBatchBar(); };
+$('bbPhrase').onclick=()=>{ batch.match=batch.match==='Phrase'?null:'Phrase'; renderBatchBar(); };
+$('bbCam').onclick=()=>{ batch.scope=batch.scope==='CAM'?null:'CAM'; renderBatchBar(); };
+$('bbAg').onclick=()=>{ batch.scope=batch.scope==='AG'?null:'AG'; renderBatchBar(); };
+$('bbAll').onclick=()=>{ filteredRows.forEach(r=>selSet.add(r._id)); renderBatchBar(); syncSelClasses(); };
+$('bbX').onclick=()=>exitBatch(true);
+$('bbAdd').onclick=()=>{
+  if(!selSet.size) return;
+  const byId=new Map(S.rows.map(r=>[r._id,r]));
+  const srcRows=new Map();
+  let expanded=[];
+  for(const id of selSet){
+    const r=byId.get(id); if(!r) continue;
+    const text=(r['Negative keyword']||'').trim(); if(!text) continue;
+    if(!srcRows.has(r._src)) srcRows.set(r._src,S.rows.filter(x=>x._src===r._src));
+    expanded.push(...expandNegatives({text,match:batch.match,scope:batch.scope},r,srcRows.get(r._src)).map(n=>({...n,srcId:r._src})));
+  }
+  const added=dedupeNegatives(S.negatives,expanded);
+  exitBatch(false);
+  commitNegatives(added,{match:batch.match,scope:batch.scope},selSetLabel());
+};
+function selSetLabel(){ return 'batch'; }
+
+/* — Inline expansion panel (word-level selection, unchanged options) — */
 function getDraft(id){ return S.drafts[id]||(S.drafts[id]={neg:[],mw:[],match:null,scope:null}); }
-function openRowSheet(id){ sheetRowId=id; renderRowSheet(); showSheet('rowSheet'); }
-function renderRowSheet(){
-  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+function renderExpPanel(){
+  const r=S.rows.find(x=>x._id===expandedId); if(!r||!expPanel) return;
   const d=getDraft(r._id);
-  const body=$('rowSheetBody'); body.innerHTML='';
-  const line=el('div','sh-kwline');
-  line.append(el('div','sh-kw',r['Negative keyword']||''));
-  const g=el('a','sh-glink','Google'); g.target='_blank'; g.rel='noopener';
+  const body=expPanel; body.innerHTML='';
+  body.addEventListener('click',e=>e.stopPropagation());
+
+  const nav=el('div','exp-nav');
+  const g=el('a',null,'Google'); g.target='_blank'; g.rel='noopener';
   g.href='https://www.google.com/search?q='+encodeURIComponent(r['Negative keyword']||'').replace(/%20/g,'+');
-  line.append(g); body.append(line);
-  body.append(el('div','sh-meta',r._acct+' · '+String(r['Customer ID']||'')+'\n'+(r['Campaign']||'')+(r['Ad group']?'\n'+r['Ad group']:'')+
-    '\n'+fmt(r.impr)+' impr · '+fmt(r.clicks)+' clk · '+fmt(r.conv)+' conv · '+fmtC(r.cost)+
-    (S.sources.length>1?'\nfile: '+srcShort(r._src):'')));
+  const idx=expIndex();
+  const prev=el('button',null,'\u2039'); prev.disabled=idx<=0;
+  prev.onclick=()=>jumpExpand(idx-1);
+  const next=el('button',null,'\u203A'); next.disabled=idx>=filteredRows.length-1;
+  next.onclick=()=>jumpExpand(idx+1);
+  nav.append(g,prev,next); body.append(nav);
+  body.append(el('div','exp-meta',String(r['Customer ID']||'')+(S.sources.length>1?' · '+srcShort(r._src):'')+' · '+fmtC(r.cost)));
 
   body.append(el('div','sh-label','Negative words — tap to select'));
   const negChips=el('div','chips');
   r._words.forEach(w=>{
     const c=el('button','chip'+(d.neg.includes(w)?' on':''),w);
     c.onclick=()=>{ d.neg=d.neg.includes(w)?d.neg.filter(x=>x!==w):[...d.neg,w];
-      if(!d.neg.length){d.match=null;d.scope=null;} renderRowSheet(); };
+      if(!d.neg.length){d.match=null;d.scope=null;} rerenderExp(); };
     negChips.append(c);
   });
   if(r._words.length){
-    const all=el('button','chip all','all+');
     const allOn=d.neg.length===r._words.length&&r._words.every(w=>d.neg.includes(w));
-    if(allOn) all.classList.add('on');
-    all.onclick=()=>{ d.neg=allOn?[]:[...r._words]; if(!d.neg.length){d.match=null;d.scope=null;} renderRowSheet(); };
+    const all=el('button','chip all'+(allOn?' on':''),'all+');
+    all.onclick=()=>{ d.neg=allOn?[]:[...r._words]; if(!d.neg.length){d.match=null;d.scope=null;} rerenderExp(); };
     negChips.append(all);
   }
   body.append(negChips);
 
   body.append(el('div','sh-label','Match type · scope'));
   const seg=el('div','seg');
-  [['Exact','match'],['Phrase','match']].forEach(([v])=>{
+  [['Exact'],['Phrase']].forEach(([v])=>{
     const b=el('button','tgl'+(d.match===v?' on':''),v);
-    b.onclick=()=>{ d.match=d.match===v?null:v; renderRowSheet(); }; seg.append(b);
+    b.onclick=()=>{ d.match=d.match===v?null:v; rerenderExp(); }; seg.append(b);
   });
-  const brNote=el('span',null,''); brNote.style.cssText='color:var(--faint);font-size:10.5px;align-self:center';
-  brNote.textContent=d.match?'':'(none = Broad)'; seg.append(brNote);
+  const brNote=el('span',null,d.match?'':'(none = Broad)');
+  brNote.style.cssText='color:var(--faint);font-size:10.5px;align-self:center'; seg.append(brNote);
+  if(S.lastCombo.match||S.lastCombo.scope){
+    const lc=el('button','lastchip','\u27F2 '+comboLabel(S.lastCombo));
+    lc.onclick=()=>{ d.match=S.lastCombo.match; d.scope=S.lastCombo.scope; rerenderExp(); };
+    seg.append(lc);
+  }
   const spacer=el('span'); spacer.style.flex='1'; seg.append(spacer);
   [['CAM','Campaign'],['AG','Ad group']].forEach(([v,label])=>{
     const b=el('button','tgl'+(d.scope===v?' on':''),label);
-    b.onclick=()=>{ d.scope=d.scope===v?null:v; renderRowSheet(); }; seg.append(b);
+    b.onclick=()=>{ d.scope=d.scope===v?null:v; rerenderExp(); }; seg.append(b);
   });
   body.append(seg);
-  const scopeNote=el('div','note'); scopeNote.style.paddingTop='6px';
+  const scopeNote=el('div','note'); scopeNote.style.padding='5px 0 0';
   scopeNote.textContent=d.scope==='CAM'?'Applies to this campaign only.':d.scope==='AG'?'Applies to this ad group across its campaigns (this file).':'No scope = all campaigns for this customer (this file).';
   body.append(scopeNote);
 
@@ -560,40 +879,56 @@ function renderRowSheet(){
     const mChips=el('div','chips');
     r._mwords.forEach(w=>{
       const c=el('button','chip mchip'+(d.mw.includes(w)?' on':''),w);
-      c.onclick=()=>{ d.mw=d.mw.includes(w)?d.mw.filter(x=>x!==w):[...d.mw,w]; renderRowSheet(); };
+      c.onclick=()=>{ d.mw=d.mw.includes(w)?d.mw.filter(x=>x!==w):[...d.mw,w]; rerenderExp(); };
       mChips.append(c);
     });
     const allOn=d.mw.length===r._mwords.length&&r._mwords.every(w=>d.mw.includes(w));
     const all=el('button','chip mchip all'+(allOn?' on':''),'all+');
-    all.onclick=()=>{ d.mw=allOn?[]:[...r._mwords]; renderRowSheet(); };
+    all.onclick=()=>{ d.mw=allOn?[]:[...r._mwords]; rerenderExp(); };
     mChips.append(all);
     body.append(mChips);
   }
 
-  const pv=el('div','sh-preview');
   if(d.neg.length){
-    pv.textContent='\u2192 '+d.neg.join(' ')+(d.match?' ['+d.match+']':' [Broad]')+(d.mw.length?'  :  '+d.mw.join(' '):'');
+    body.append(el('div','sh-preview','\u2192 '+d.neg.join(' ')+(d.match?' ['+d.match+']':' [Broad]')+(d.mw.length?'  :  '+d.mw.join(' '):'')));
   }
-  body.append(pv);
 
-  $('btnAddNeg').disabled=!d.neg.length;
-  $('btnAddSame').disabled=!(d.neg.length&&d.mw.length);
+  const acts=el('div','exp-actions');
+  const bNeg=el('button','abtn primary','+ Negative'); bNeg.disabled=!d.neg.length;
+  bNeg.onclick=()=>addNegative(r);
+  const bSame=el('button','abtn match','+ Same Words'); bSame.disabled=!(d.neg.length&&d.mw.length);
+  bSame.onclick=()=>addSameWords(r);
+  const bClr=el('button','abtn','Clear');
+  bClr.onclick=()=>{ delete S.drafts[r._id]; rerenderExp(); };
+  acts.append(bNeg,bSame,bClr);
+  body.append(acts);
 }
-$('btnAddNeg').onclick=()=>{
-  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+function jumpExpand(idx){
+  if(idx<0||idx>=filteredRows.length) return;
+  expandedId=filteredRows[idx]._id; expandH=0; expNeedCenter=true;
+  if(expPanel){ expPanel.remove(); expPanel=null; }
+  rendered.forEach(n=>{ n.remove(); if(n._bg)n._bg.remove(); }); rendered.clear();
+  renderVList();
+}
+function rerenderExp(){
+  renderExpPanel();
+  const idx=expIndex();
+  if(idx>=0&&expPanel){
+    const hNow=expPanel.offsetHeight;
+    if(hNow&&hNow!==expandH){ expandH=hNow; renderVList(); }
+  }
+}
+function addNegative(r){
   const d=getDraft(r._id); if(!d.neg.length) return;
   const text=d.neg.join(' ').trim(); if(!text) return;
-  const item={text,match:d.match,scope:d.scope};
+  const combo={match:d.match,scope:d.scope};
   d.neg=[]; d.match=null; d.scope=null;
   const sameSrc=S.rows.filter(x=>x._src===r._src);
-  const expanded=expandNegatives(item,r,sameSrc).map(n=>({...n,srcId:r._src}));
-  const added=dedupeNegatives(S.negatives,expanded);
-  S.negatives.push(...added);
-  save(); recompute(); refreshAll(); renderRowSheet();
-  toast('+'+added.length+' negative row'+(added.length!==1?'s':'')+' \u2192 '+srcShort(r._src));
-};
-$('btnAddSame').onclick=()=>{
-  const r=S.rows.find(x=>x._id===sheetRowId); if(!r) return;
+  const expanded=expandNegatives({text,match:combo.match,scope:combo.scope},r,sameSrc).map(n=>({...n,srcId:r._src}));
+  closeExpand(false);           // collapse on commit — straight to the next row
+  commitNegatives(dedupeNegatives(S.negatives,expanded),combo,srcShort(r._src));
+}
+function addSameWords(r){
   const d=getDraft(r._id);
   const left=d.neg.join(' ').trim(), right=d.mw.join(' ').trim();
   if(!left||!right) return;
@@ -603,9 +938,52 @@ $('btnAddSame').onclick=()=>{
     toast('+ same words pair');
   } else toast('duplicate pair — skipped');
   d.mw=[];
-  save(); refreshAll(); renderRowSheet();
-};
-$('btnClearDraft').onclick=()=>{ delete S.drafts[sheetRowId]; renderRowSheet(); };
+  save(); renderBadges(); rerenderExp();   // stays open so + Negative can follow
+}
+
+/* — Statline / badges — */
+function renderStatline(){
+  const sl=$('statline'); sl.innerHTML='';
+  const span=(html)=>{ const s=el('span'); s.innerHTML=html; sl.append(s); };
+  span('<b>'+fmt(filteredRows.length)+'</b> rows');
+  if(blockedSet.size){
+    const b=el('button','statbtn'); b.innerHTML='<b>'+fmt(blockedSet.size)+'</b> blocked \u203A';
+    b.onclick=()=>{ renderImpSheet(); showSheet('impSheet'); };
+    sl.append(b);
+  }
+  if(S.ui.activeNgrams.length) span('<span class="ngactive">ngram: '+S.ui.activeNgrams.join(', ')+'</span>');
+  if(S.ui.minImpr) span('impr\u2265'+S.ui.minImpr);
+  if(S.ui.srcOff.length||S.ui.acctOff.length) span('filters on');
+}
+function renderBadges(){
+  $('bSelect').textContent=fmt(filteredRows.length);
+  $('bNeg').textContent=fmt(S.negatives.length);
+  $('bSame').textContent=fmt(S.sameWords.length);
+  $('bFiles').textContent=S.sources.length;
+  $('hdrSub').textContent=S.sources.length? S.sources.length+' file'+(S.sources.length>1?'s':'')+' · '+fmt(S.rows.length)+' rows':'no files loaded';
+}
+
+/* — Impact sheet: totals excluded by committed negatives, filter-adjusted — */
+function renderImpSheet(){
+  const b=$('impBody'); b.innerHTML='';
+  b.append(el('div','sh-label','Excluded by negatives — current filters'));
+  const a=impact.all, k=impact.blocked;
+  if(!a||!k||!k.rows){ b.append(el('div','note','Nothing in the current view is blocked by committed negatives.')); return; }
+  const tbl=el('table','imp-table');
+  tbl.innerHTML='<tr><th></th><th>Rows</th><th>Impr</th><th>Clicks</th><th>Conv</th><th>Cost</th></tr>'+
+    '<tr><td class="lab">Table total</td><td>'+fmt(a.rows)+'</td><td>'+fmt(a.impr)+'</td><td>'+fmt(a.clicks)+'</td><td>'+fmt(a.conv)+'</td><td>'+fmtC(a.cost)+'</td></tr>'+
+    '<tr><td class="lab">Excluded</td><td>'+fmt(k.rows)+'</td><td>'+fmt(k.impr)+'</td><td>'+fmt(k.clicks)+'</td><td>'+fmt(k.conv)+'</td><td>'+fmtC(k.cost)+'</td></tr>'+
+    '<tr class="pct"><td class="lab">% of total</td><td>'+pct(k.rows,a.rows)+'</td><td>'+pct(k.impr,a.impr)+'</td><td>'+pct(k.clicks,a.clicks)+'</td><td>'+pct(k.conv,a.conv)+'</td><td>'+pct(k.cost,a.cost)+'</td></tr>';
+  b.append(tbl);
+  if(impact.bySrc.length>1){
+    b.append(el('div','sh-label','Excluded impressions by file'));
+    const t2=el('table','imp-table');
+    t2.innerHTML='<tr><th></th><th>Rows</th><th>Impr</th></tr>'+
+      impact.bySrc.map(([src,t])=>'<tr><td class="lab">'+srcShort(src)+'</td><td>'+fmt(t.rows)+'</td><td>'+fmt(t.impr)+'</td></tr>').join('');
+    b.append(t2);
+  }
+  b.append(el('div','note','Totals reflect the active search / filters / ngram selections. "Excluded" = rows a committed negative would block, whether or not Hide blocked is on.'));
+}
 
 /* — Sheets plumbing — */
 function showSheet(id){ $('scrim').classList.add('on'); $(id).classList.add('on'); }
@@ -616,8 +994,12 @@ function hideSheets(){
 }
 $('scrim').onclick=hideSheets;
 
-/* — Ngram sheet — */
-$('btnNgram').onclick=()=>{ renderNgSheet(); showSheet('ngSheet'); };
+/* — Ngram sheet (aggregation built lazily here, not in the hot path) — */
+$('btnNgram').onclick=()=>{ buildNgramList(); renderNgSheet(); showSheet('ngSheet'); };
+function buildNgramList(){
+  ngramList=buildNgrams(filteredRows,S.ui.ngMode==='2'?2:1)
+    .sort((a,b)=>b[S.ui.ngSort]-a[S.ui.ngSort]).slice(0,120);
+}
 function renderNgSheet(){
   document.querySelectorAll('[data-ngmode]').forEach(b=>b.classList.toggle('on',b.dataset.ngmode===S.ui.ngMode));
   $('ngSort').value=S.ui.ngSort;
@@ -627,15 +1009,15 @@ function renderNgSheet(){
     const c=el('button','ngchip'+(on?' on':''));
     c.innerHTML=n.ngram+'<small>'+fmt(n[S.ui.ngSort])+'</small>';
     c.onclick=()=>{ S.ui.activeNgrams=on?S.ui.activeNgrams.filter(x=>x!==n.ngram):[...S.ui.activeNgrams,n.ngram];
-      save(); recompute(); renderNgSheet(); };
+      save(); recompute(); buildNgramList(); renderNgSheet(); };
     list.append(c);
   });
   if(!ngramList.length) list.append(el('div','note','No rows in view.'));
 }
 document.querySelectorAll('[data-ngmode]').forEach(b=>b.onclick=()=>{
-  S.ui.ngMode=b.dataset.ngmode; S.ui.activeNgrams=[]; save(); recompute(); renderNgSheet(); });
-$('ngSort').onchange=e=>{ S.ui.ngSort=e.target.value; save(); recompute(); renderNgSheet(); };
-$('ngClear').onclick=()=>{ S.ui.activeNgrams=[]; save(); recompute(); renderNgSheet(); };
+  S.ui.ngMode=b.dataset.ngmode; S.ui.activeNgrams=[]; save(); recompute(); buildNgramList(); renderNgSheet(); });
+$('ngSort').onchange=e=>{ S.ui.ngSort=e.target.value; save(); buildNgramList(); renderNgSheet(); };
+$('ngClear').onclick=()=>{ S.ui.activeNgrams=[]; save(); recompute(); buildNgramList(); renderNgSheet(); };
 
 /* — Filter sheet — */
 $('btnFilter').onclick=()=>{ renderFltSheet(); showSheet('fltSheet'); };
@@ -678,7 +1060,7 @@ $('fltReset').onclick=()=>{
 /* — Negatives tab (grouped by source; export per source only) — */
 function renderNegPane(){
   const p=$('negPane'); p.innerHTML='';
-  if(!S.negatives.length){ p.append(el('div','emptymsg','No negatives yet. Select words on a row in the Select tab, then tap + Negative.')); return; }
+  if(!S.negatives.length){ p.append(el('div','emptymsg','No negatives yet. Tap a row to pick words, swipe a row left for a one-gesture full-term add, or long-press to batch-select rows.')); return; }
   p.append(Object.assign(el('div','note'),{textContent:'Exports are separated per import file — each download only contains negatives built from that file\u2019s rows.'}));
   const bySrc=new Map();
   S.negatives.forEach((n,i)=>{ if(!bySrc.has(n.srcId)) bySrc.set(n.srcId,[]); bySrc.get(n.srcId).push({n,i}); });
@@ -701,7 +1083,7 @@ function renderNegPane(){
       main.append(el('div','sub',n.customerId+' · '+n.campaign+(n.adGroup?' · '+n.adGroup:'')));
       row.append(main);
       const x=el('button','xbtn','\u00D7');
-      x.onclick=()=>{ S.negatives.splice(i,1); save(); recompute(); refreshAll(); };
+      x.onclick=()=>{ S.negatives.splice(i,1); negVer++; save(); recompute(); refreshAll(); };
       row.append(x); card.append(row);
     });
     if(items.length>LIMIT&&!card._exp){
@@ -712,7 +1094,7 @@ function renderNegPane(){
     p.append(card);
   }
   const clr=el('button','dangerbtn','Clear all negatives');
-  clr.onclick=()=>{ if(confirm('Delete all committed negatives?')){ S.negatives=[]; save(); recompute(); refreshAll(); } };
+  clr.onclick=()=>{ if(confirm('Delete all committed negatives?')){ S.negatives=[]; negVer++; save(); recompute(); refreshAll(); } };
   p.append(clr);
 }
 function downloadNegativesFor(srcId){
@@ -728,7 +1110,7 @@ function downloadNegativesFor(srcId){
 /* — Same Words tab (grouped by source; export per source) — */
 function renderSamePane(){
   const p=$('samePane'); p.innerHTML='';
-  if(!S.sameWords.length){ p.append(el('div','emptymsg','No same-words pairs yet. In a row sheet, select negative words + matched-keyword words, then tap + Same Words.')); return; }
+  if(!S.sameWords.length){ p.append(el('div','emptymsg','No same-words pairs yet. In an expanded row, select negative words + matched-keyword words, then tap + Same Words.')); return; }
   const bySrc=new Map();
   S.sameWords.forEach((s,i)=>{ if(!bySrc.has(s.srcId)) bySrc.set(s.srcId,[]); bySrc.get(s.srcId).push({s,i}); });
   for(const [srcId,items] of bySrc){
@@ -763,13 +1145,26 @@ function renderSamePane(){
 function renderFilesPane(){
   const p=$('filesPane'); p.innerHTML='';
   const lab=el('label','upl');
-  lab.innerHTML='<b>Tap to add CSV files</b><br>Candidate-Negatives export format \u2014 any filename.<br>Multiple files combine in the Select view; exports stay separated per file.';
+  lab.innerHTML='<b>Tap to add CSV files</b><br>Candidate-Negatives export format \u2014 any filename.<br>Files combine in Select; exact duplicate rows are dropped; exports stay separated per file.';
   const inp=document.createElement('input');
   inp.type='file'; inp.accept='.csv,text/csv'; inp.multiple=true;
   inp.addEventListener('change',e=>{ handleFiles([...e.target.files]); inp.value=''; });
   lab.append(inp); p.append(lab);
+
+  const rlab=el('label','upl repl');
+  rlab.innerHTML='<b>\u27F3 Replace all with new files</b> \u2014 clears every upload, negative and pair first';
+  const rinp=document.createElement('input');
+  rinp.type='file'; rinp.accept='.csv,text/csv'; rinp.multiple=true;
+  rinp.addEventListener('change',e=>{
+    const files=[...e.target.files]; rinp.value='';
+    if(!files.length) return;
+    if(!confirm('Replace everything? All uploads, committed negatives and same-words pairs will be cleared, then the new files imported.')) return;
+    wipeAll(); handleFiles(files);
+  });
+  rlab.append(rinp); p.append(rlab);
+
   if(S.sources.length&&!S.rowsPersisted&&!S.rows.length)
-    p.append(el('div','note','\u26A0 The row data from your previous session was too large to keep on-device. Re-upload the file(s) above to continue selecting \u2014 your committed negatives and same-words below are saved.'));
+    p.append(el('div','note','\u26A0 Row data from your previous session couldn\u2019t be restored. Re-upload the file(s) above to continue selecting \u2014 your committed negatives and same-words below are saved.'));
   S.sources.forEach(s=>{
     const card=el('div','card');
     const h=el('div','card-h');
@@ -784,14 +1179,22 @@ function renderFilesPane(){
       S.negatives=S.negatives.filter(n=>n.srcId!==s.id);
       S.sameWords=S.sameWords.filter(n=>n.srcId!==s.id);
       S.ui.srcOff=S.ui.srcOff.filter(z=>z!==s.id);
-      save(); recompute(); refreshAll();
+      rowsVer++; negVer++;
+      if(expandedId&&!S.rows.some(r=>r._id===expandedId)) closeExpand(false);
+      save(); saveRows(); recompute(); refreshAll();
     };
     h.append(x); card.append(h); p.append(card);
   });
-  p.append(Object.assign(el('div','note'),{textContent:'Everything runs on this device. Nothing is uploaded anywhere; exports download straight to your phone.'}));
+  if(S.sources.length||S.negatives.length||S.sameWords.length){
+    const wipe=el('button','dangerbtn','Clear all data (uploads, negatives, pairs, saved session)');
+    wipe.onclick=()=>{ if(confirm('Wipe everything, including the saved session on this device?')){ wipeAll(); recompute(); refreshAll(); toast('cleared'); } };
+    p.append(wipe);
+  }
+  p.append(Object.assign(el('div','note'),{textContent:'No sample data ships in this app \u2014 anything shown on load is your own previous session, restored from this device\u2019s storage. Everything runs on-device; exports download straight to your phone.'}));
 }
 async function handleFiles(files){
-  let added=0;
+  let added=0, dupes=0;
+  const seenKeys=new Set(S.rows.map(rawKey));
   for(const f of files){
     if(!/\.csv$/i.test(f.name)&&f.type!=='text/csv') continue;
     try{
@@ -800,17 +1203,32 @@ async function handleFiles(files){
       const usable=raw.filter(r=>String(r['Negative keyword']||'').trim());
       if(!usable.length){ toast('No "Negative keyword" column rows in '+f.name); continue; }
       const id='s'+(srcSeq++);
-      S.sources.push({id,name:f.name,addedAt:Date.now(),rowCount:usable.length});
-      usable.forEach((r,i)=>S.rows.push(deriveRow(r,id,i)));
+      let kept=0;
+      usable.forEach(r=>{
+        const k=rawKey(r);
+        if(seenKeys.has(k)){ dupes++; return; }   // drop the duplicate, keep the original
+        seenKeys.add(k);
+        S.rows.push(deriveRow(r,id,kept)); kept++;
+      });
+      if(!kept){ srcSeq--; toast(f.name+': all rows were duplicates of loaded data'); continue; }
+      S.sources.push({id,name:f.name,addedAt:Date.now(),rowCount:kept});
       added++;
     }catch(e){ toast('Failed to read '+f.name); }
   }
-  if(added){ save(); recompute(); refreshAll(); toast('+'+added+' file'+(added>1?'s':'')+' loaded'); setTab('select'); }
+  if(added||dupes){
+    rowsVer++;
+    save(); saveRows(); recompute(); refreshAll();
+  }
+  if(added){
+    toast('+'+added+' file'+(added>1?'s':'')+' loaded'+(dupes?' \u00B7 '+dupes+' dupe row'+(dupes>1?'s':'')+' dropped':''));
+    setTab('select');
+  }
 }
 
 /* — Tabs / refresh — */
 function setTab(t){
   S.ui.tab=t;
+  if(t!=='select') exitBatch(false);
   document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   ['select','negatives','same','files'].forEach(x=>$('pane-'+x).classList.toggle('on',x===t));
   refreshAll();
@@ -818,7 +1236,16 @@ function setTab(t){
 document.querySelectorAll('.tabbar button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
 function refreshAll(){
   renderBadges();
-  if(S.ui.tab==='select'){ renderStatline(); rendered.forEach(n=>n.remove()); rendered.clear(); vinner.querySelectorAll('.emptymsg').forEach(n=>n.remove()); renderVList(); }
+  if(S.ui.tab==='select'){
+    renderStatline();
+    rendered.forEach(n=>{ n.remove(); if(n._bg)n._bg.remove(); }); rendered.clear();
+    if(expPanel){ expPanel.remove(); expPanel=null; }
+    vinner.querySelectorAll('.emptymsg').forEach(n=>n.remove());
+    if(expandedId){ expandH=0; }
+    renderVList();
+    if(expandedId&&expIndex()>=0){ renderVList(); }
+    if(selMode) renderBatchBar();
+  }
   if(S.ui.tab==='negatives') renderNegPane();
   if(S.ui.tab==='same') renderSamePane();
   if(S.ui.tab==='files') renderFilesPane();
@@ -830,11 +1257,13 @@ $('search').addEventListener('input',e=>{
 });
 window.addEventListener('resize',()=>{ if(S.ui.tab==='select') renderVList(); });
 
-/* — Boot — */
-load();
-$('search').value=S.ui.search||'';
-recompute();
-setTab(S.rows.length?'select':'files');
+/* — Boot (async: rows hydrate from IndexedDB) — */
+(async()=>{
+  await load();
+  $('search').value=S.ui.search||'';
+  recompute();
+  setTab(S.rows.length?'select':'files');
+})();
 </script>
 </body>
 </html>
