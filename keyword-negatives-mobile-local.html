@@ -18,11 +18,11 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:var(--bg);color:var(--text);font:13px/1.45 var(--mono);overscroll-behavior:none}
+body{background:var(--bg);color:var(--text);font:13px/1.45 var(--mono);overscroll-behavior:none;position:fixed;inset:0;overflow:hidden;width:100%}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 input,select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:8px;outline:none}
 input:focus,select:focus{border-color:var(--amber)}
-#app{display:flex;flex-direction:column;height:100dvh}
+#app{display:flex;flex-direction:column;height:100%;height:100dvh}
 
 /* ── Header ── */
 .hdr{display:flex;align-items:baseline;gap:8px;padding:10px 14px 8px;border-bottom:1px solid var(--border);flex:none}
@@ -69,15 +69,17 @@ input:focus,select:focus{border-color:var(--amber)}
 .emptymsg{padding:40px 24px;text-align:center;color:var(--dim);font-size:13px;line-height:1.7}
 
 /* ── Inline expansion panel ── */
-.exp{position:absolute;left:0;right:0;background:var(--panel);border-left:3px solid var(--amber);border-bottom:1px solid var(--border);padding:8px 12px 10px 9px;z-index:5}
-.exp .sh-label{margin:9px 0 5px}
-.exp-meta{font-size:10.5px;color:var(--dim);line-height:1.55;word-break:break-word;padding-right:126px}
-.exp-nav{position:absolute;top:6px;right:10px;display:flex;gap:5px}
-.exp-nav button{border:1px solid var(--border);border-radius:7px;background:var(--panel2);color:var(--dim);font-size:13px;padding:4px 10px;min-height:30px}
-.exp-nav a{color:var(--blue);font-size:11px;border:1px solid var(--border);border-radius:7px;padding:5px 8px;text-decoration:none;align-self:center}
-.exp-actions{display:flex;gap:6px;margin-top:10px}
-.exp-actions .abtn{min-height:40px;padding:9px 6px;font-size:12.5px}
-.lastchip{border:1px dashed var(--faint);color:var(--purple);border-radius:9px;padding:7px 12px;font-size:12px;min-height:36px}
+.exp{position:absolute;left:0;right:0;background:var(--panel);border-left:3px solid var(--amber);border-bottom:1px solid var(--border);padding:7px 10px 8px 8px;z-index:5}
+.exp .sh-label{margin:7px 0 4px;font-size:9px}
+.exp-meta{font-size:10.5px;color:var(--dim);line-height:1.5;word-break:break-word;padding-right:126px;min-height:30px}
+.exp-div{border-top:1px solid var(--border);margin:8px 0 0}
+.exp-nav{position:absolute;top:5px;right:8px;display:flex;gap:4px}
+.exp-nav button{border:1px solid var(--border);border-radius:7px;background:var(--panel2);color:var(--dim);font-size:13px;padding:3px 10px;min-height:28px}
+.exp-nav a{color:var(--blue);font-size:11px;border:1px solid var(--border);border-radius:7px;padding:4px 8px;text-decoration:none;align-self:center}
+.exp-actions{display:flex;gap:5px;margin-top:8px}
+.exp-actions .abtn{min-height:38px;padding:8px 4px;font-size:12px}
+.abtn.skip{color:var(--red);border-color:#4a2321;flex:.65}
+.lastchip{border:1px dashed var(--faint);color:var(--purple);border-radius:8px;padding:6px 9px;font-size:11.5px;min-height:32px;flex:none}
 
 /* ── Batch action bar (long-press multi-select) ── */
 #batchBar{position:fixed;left:0;right:0;bottom:calc(64px + var(--safe-b));z-index:30;background:var(--panel);border-top:2px solid var(--blue);padding:8px 12px 10px;display:none}
@@ -99,12 +101,15 @@ input:focus,select:focus{border-color:var(--amber)}
 .sheet-grab{flex:none;width:38px;height:4px;border-radius:2px;background:var(--faint);margin:8px auto 4px}
 .sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 14px 8px}
 .sh-label{font-size:10px;letter-spacing:.09em;color:var(--faint);text-transform:uppercase;margin:12px 0 6px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:7px 12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:13px;min-height:36px;color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);font-size:12.5px;min-height:32px;color:var(--text)}
 .chip.on{background:var(--amber-dim);border-color:var(--amber);color:var(--amber)}
-.chip.mchip.on{background:#1b3a5c;border-color:var(--blue);color:var(--blue)}
+.chip.mchip{padding:4px 8px;min-height:26px;font-size:11px;color:var(--faint);background:transparent;border-color:#1a2331}
+.chip.mchip.on{background:#152c47;border-color:#2b598c;color:var(--blue)}
 .chip.all{color:var(--dim);font-style:italic}
-.tgl{padding:7px 12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px;color:var(--dim);min-height:36px}
+.tgl{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);font-size:12px;color:var(--dim);min-height:32px}
+.tgl.sm{width:42px;padding:6px 0;text-align:center;flex:none}
+.mini{font-size:10px;color:var(--dim);padding:2px 8px;border:1px solid var(--border);border-radius:6px;min-height:24px;margin-left:6px;text-transform:none;letter-spacing:0}
 .tgl.on{border-color:var(--amber);color:var(--amber);background:var(--amber-dim)}
 .sh-preview{margin-top:8px;font-size:12px;color:var(--purple);min-height:16px;word-break:break-word}
 .abtn{flex:1;padding:12px 8px;border-radius:10px;font-size:13px;font-weight:700;min-height:46px;border:1px solid var(--border);color:var(--dim)}
@@ -196,16 +201,15 @@ input:focus,select:focus{border-color:var(--amber)}
 
 <!-- Batch bar: long-press a row to enter multi-select; adds each row's FULL search term -->
 <div id="batchBar">
-  <div class="bb-top"><b id="bbCount">0</b><span>selected · full term as negative</span>
+  <div class="bb-top"><b id="bbCount">0</b><span>selected</span>
     <button class="lnk" id="bbAll">all in view</button>
     <button class="bbx" id="bbX">✕</button>
   </div>
   <div class="bb-row">
-    <button class="tgl" id="bbExact">Exact</button>
-    <button class="tgl" id="bbPhrase">Phrase</button>
-    <span class="bb-note" id="bbMatchNote">(none = Broad)</span>
-    <button class="tgl" id="bbCam">Campaign</button>
-    <button class="tgl" id="bbAg">Ad group</button>
+    <button class="tgl sm" id="bbExact">Ex</button>
+    <button class="tgl sm" id="bbPhrase">Ph</button>
+    <button class="tgl sm" id="bbCam">Ca</button>
+    <button class="tgl sm" id="bbAg">AG</button>
     <button class="abtn primary" id="bbAdd">Add</button>
   </div>
 </div>
@@ -237,9 +241,9 @@ input:focus,select:focus{border-color:var(--amber)}
 <div class="sheet" id="fltSheet">
   <div class="sheet-grab"></div>
   <div class="sheet-body">
-    <div class="sh-label">Source files</div>
+    <div class="sh-label">Source files<button class="mini" id="srcAllBtn">all</button><button class="mini" id="srcNoneBtn">none</button></div>
     <div class="chips" id="fltSrc"></div>
-    <div class="sh-label">Accounts</div>
+    <div class="sh-label">Accounts<button class="mini" id="acctAllBtn">all</button><button class="mini" id="acctNoneBtn">none</button></div>
     <div class="chips" id="fltAcct"></div>
     <div class="sh-label">Minimum impressions</div>
     <div class="seg" id="fltImpr">
@@ -257,8 +261,7 @@ input:focus,select:focus{border-color:var(--amber)}
       <button class="tgl" data-sort="clicks">Clicks</button>
       <button class="tgl" data-sort="kw">A–Z</button>
     </div>
-    <div class="sh-label">Hide rows already blocked by committed negatives</div>
-    <div class="seg"><button class="tgl" id="fltHideBlocked">Hide blocked</button></div>
+    <div class="seg" style="margin-top:12px"><button class="tgl" id="fltHideBlocked">Hide blocked</button></div>
     <div style="height:8px"></div>
     <button class="dangerbtn" id="fltReset">Reset all filters</button>
   </div>
@@ -594,7 +597,7 @@ const srcShort=id=>srcName(id).replace(/\.csv$/i,'').slice(0,26);
 const fmt=n=>n.toLocaleString();
 const fmtC=n=>'$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct=(a,b)=>b?((a/b*100).toFixed(1)+'%'):'—';
-const comboLabel=c=>(c.match||'Broad')+' · '+(c.scope==='CAM'?'Campaign':c.scope==='AG'?'Ad group':'Customer');
+const comboLabel=c=>(c.match==='Exact'?'Ex':c.match==='Phrase'?'Ph':'Br')+'\u00B7'+(c.scope==='CAM'?'Ca':c.scope==='AG'?'AG':'Cu');
 
 function toast(msg){
   $('toastMsg').textContent=msg; $('toastUndo').classList.remove('on');
@@ -789,7 +792,6 @@ function renderBatchBar(){
   $('bbCount').textContent=fmt(selSet.size);
   $('bbExact').classList.toggle('on',batch.match==='Exact');
   $('bbPhrase').classList.toggle('on',batch.match==='Phrase');
-  $('bbMatchNote').textContent=batch.match?'':'(none = Broad)';
   $('bbCam').classList.toggle('on',batch.scope==='CAM');
   $('bbAg').classList.toggle('on',batch.scope==='AG');
 }
@@ -835,8 +837,7 @@ function renderExpPanel(){
   nav.append(g,prev,next); body.append(nav);
   body.append(el('div','exp-meta',String(r['Customer ID']||'')+(S.sources.length>1?' · '+srcShort(r._src):'')+' · '+fmtC(r.cost)));
 
-  body.append(el('div','sh-label','Negative words — tap to select'));
-  const negChips=el('div','chips');
+  const negChips=el('div','chips'); negChips.style.marginTop='4px';
   r._words.forEach(w=>{
     const c=el('button','chip'+(d.neg.includes(w)?' on':''),w);
     c.onclick=()=>{ d.neg=d.neg.includes(w)?d.neg.filter(x=>x!==w):[...d.neg,w];
@@ -851,31 +852,25 @@ function renderExpPanel(){
   }
   body.append(negChips);
 
-  body.append(el('div','sh-label','Match type · scope'));
-  const seg=el('div','seg');
-  [['Exact'],['Phrase']].forEach(([v])=>{
-    const b=el('button','tgl'+(d.match===v?' on':''),v);
+  const seg=el('div','seg'); seg.style.marginTop='8px';
+  [['Exact','Ex'],['Phrase','Ph']].forEach(([v,label])=>{
+    const b=el('button','tgl sm'+(d.match===v?' on':''),label);
     b.onclick=()=>{ d.match=d.match===v?null:v; rerenderExp(); }; seg.append(b);
   });
-  const brNote=el('span',null,d.match?'':'(none = Broad)');
-  brNote.style.cssText='color:var(--faint);font-size:10.5px;align-self:center'; seg.append(brNote);
+  [['CAM','Ca'],['AG','AG']].forEach(([v,label])=>{
+    const b=el('button','tgl sm'+(d.scope===v?' on':''),label);
+    b.onclick=()=>{ d.scope=d.scope===v?null:v; rerenderExp(); }; seg.append(b);
+  });
   if(S.lastCombo.match||S.lastCombo.scope){
     const lc=el('button','lastchip','\u27F2 '+comboLabel(S.lastCombo));
     lc.onclick=()=>{ d.match=S.lastCombo.match; d.scope=S.lastCombo.scope; rerenderExp(); };
     seg.append(lc);
   }
-  const spacer=el('span'); spacer.style.flex='1'; seg.append(spacer);
-  [['CAM','Campaign'],['AG','Ad group']].forEach(([v,label])=>{
-    const b=el('button','tgl'+(d.scope===v?' on':''),label);
-    b.onclick=()=>{ d.scope=d.scope===v?null:v; rerenderExp(); }; seg.append(b);
-  });
   body.append(seg);
-  const scopeNote=el('div','note'); scopeNote.style.padding='5px 0 0';
-  scopeNote.textContent=d.scope==='CAM'?'Applies to this campaign only.':d.scope==='AG'?'Applies to this ad group across its campaigns (this file).':'No scope = all campaigns for this customer (this file).';
-  body.append(scopeNote);
 
   if(r._mwords.length){
-    body.append(el('div','sh-label','Matched keyword words — for Same Words'));
+    body.append(el('div','exp-div'));
+    body.append(el('div','sh-label','Same words'));
     const mChips=el('div','chips');
     r._mwords.forEach(w=>{
       const c=el('button','chip mchip'+(d.mw.includes(w)?' on':''),w);
@@ -889,18 +884,20 @@ function renderExpPanel(){
     body.append(mChips);
   }
 
-  if(d.neg.length){
-    body.append(el('div','sh-preview','\u2192 '+d.neg.join(' ')+(d.match?' ['+d.match+']':' [Broad]')+(d.mw.length?'  :  '+d.mw.join(' '):'')));
-  }
+  body.append(el('div','sh-preview',d.neg.length?('\u2192 '+d.neg.join(' ')+(d.match?' ['+d.match+']':' [Broad]')+(d.mw.length?'  :  '+d.mw.join(' '):'')):''));
 
   const acts=el('div','exp-actions');
-  const bNeg=el('button','abtn primary','+ Negative'); bNeg.disabled=!d.neg.length;
+  const bNeg=el('button','abtn primary','+ Neg'); bNeg.disabled=!d.neg.length;
   bNeg.onclick=()=>addNegative(r);
-  const bSame=el('button','abtn match','+ Same Words'); bSame.disabled=!(d.neg.length&&d.mw.length);
+  const bSame=el('button','abtn match','+ Same'); bSame.disabled=!(d.neg.length&&d.mw.length);
   bSame.onclick=()=>addSameWords(r);
-  const bClr=el('button','abtn','Clear');
-  bClr.onclick=()=>{ delete S.drafts[r._id]; rerenderExp(); };
-  acts.append(bNeg,bSame,bClr);
+  const bSkip=el('button','abtn skip','Skip \u203A');
+  bSkip.onclick=()=>{
+    delete S.drafts[r._id];
+    const idx=expIndex();
+    if(idx+1<filteredRows.length) jumpExpand(idx+1); else closeExpand(true);
+  };
+  acts.append(bNeg,bSame,bSkip);
   body.append(acts);
 }
 function jumpExpand(idx){
@@ -923,10 +920,21 @@ function addNegative(r){
   const text=d.neg.join(' ').trim(); if(!text) return;
   const combo={match:d.match,scope:d.scope};
   d.neg=[]; d.match=null; d.scope=null;
+  const idxB=expIndex();
+  const nextId=(idxB>=0&&idxB+1<filteredRows.length)?filteredRows[idxB+1]._id:null;
   const sameSrc=S.rows.filter(x=>x._src===r._src);
   const expanded=expandNegatives({text,match:combo.match,scope:combo.scope},r,sameSrc).map(n=>({...n,srcId:r._src}));
-  closeExpand(false);           // collapse on commit — straight to the next row
+  closeExpand(false);
   commitNegatives(dedupeNegatives(S.negatives,expanded),combo,srcShort(r._src));
+  // advance: reopen on the next row (or same slot if the row was hidden/removed)
+  let target=null;
+  if(nextId&&filteredRows.some(x=>x._id===nextId)) target=nextId;
+  else if(filteredRows.length&&idxB>=0) target=filteredRows[Math.min(idxB,filteredRows.length-1)]._id;
+  if(target){
+    expandedId=target; expandH=0; expNeedCenter=true;
+    rendered.forEach(n=>{ n.remove(); if(n._bg)n._bg.remove(); }); rendered.clear();
+    renderVList();
+  }
 }
 function addSameWords(r){
   const d=getDraft(r._id);
@@ -1045,6 +1053,10 @@ function renderFltSheet(){
   document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('on',b.dataset.sort===S.ui.sort));
   $('fltHideBlocked').classList.toggle('on',S.ui.hideBlocked);
 }
+$('srcAllBtn').onclick=()=>{ S.ui.srcOff=[]; save(); recompute(); renderFltSheet(); };
+$('srcNoneBtn').onclick=()=>{ S.ui.srcOff=S.sources.map(s=>s.id); save(); recompute(); renderFltSheet(); };
+$('acctAllBtn').onclick=()=>{ S.ui.acctOff=[]; save(); recompute(); renderFltSheet(); };
+$('acctNoneBtn').onclick=()=>{ S.ui.acctOff=[...new Set(S.rows.map(r=>r._acct).filter(Boolean))]; save(); recompute(); renderFltSheet(); };
 document.querySelectorAll('[data-minimpr]').forEach(b=>b.onclick=()=>{
   S.ui.minImpr=+b.dataset.minimpr; save(); recompute(); renderFltSheet(); });
 document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{
@@ -1060,8 +1072,7 @@ $('fltReset').onclick=()=>{
 /* — Negatives tab (grouped by source; export per source only) — */
 function renderNegPane(){
   const p=$('negPane'); p.innerHTML='';
-  if(!S.negatives.length){ p.append(el('div','emptymsg','No negatives yet. Tap a row to pick words, swipe a row left for a one-gesture full-term add, or long-press to batch-select rows.')); return; }
-  p.append(Object.assign(el('div','note'),{textContent:'Exports are separated per import file — each download only contains negatives built from that file\u2019s rows.'}));
+  if(!S.negatives.length){ p.append(el('div','emptymsg','No negatives yet.')); return; }
   const bySrc=new Map();
   S.negatives.forEach((n,i)=>{ if(!bySrc.has(n.srcId)) bySrc.set(n.srcId,[]); bySrc.get(n.srcId).push({n,i}); });
   for(const [srcId,items] of bySrc){
@@ -1110,7 +1121,7 @@ function downloadNegativesFor(srcId){
 /* — Same Words tab (grouped by source; export per source) — */
 function renderSamePane(){
   const p=$('samePane'); p.innerHTML='';
-  if(!S.sameWords.length){ p.append(el('div','emptymsg','No same-words pairs yet. In an expanded row, select negative words + matched-keyword words, then tap + Same Words.')); return; }
+  if(!S.sameWords.length){ p.append(el('div','emptymsg','No pairs yet.')); return; }
   const bySrc=new Map();
   S.sameWords.forEach((s,i)=>{ if(!bySrc.has(s.srcId)) bySrc.set(s.srcId,[]); bySrc.get(s.srcId).push({s,i}); });
   for(const [srcId,items] of bySrc){
@@ -1145,14 +1156,14 @@ function renderSamePane(){
 function renderFilesPane(){
   const p=$('filesPane'); p.innerHTML='';
   const lab=el('label','upl');
-  lab.innerHTML='<b>Tap to add CSV files</b><br>Candidate-Negatives export format \u2014 any filename.<br>Files combine in Select; exact duplicate rows are dropped; exports stay separated per file.';
+  lab.innerHTML='<b>Add CSV files</b>';
   const inp=document.createElement('input');
   inp.type='file'; inp.accept='.csv,text/csv'; inp.multiple=true;
   inp.addEventListener('change',e=>{ handleFiles([...e.target.files]); inp.value=''; });
   lab.append(inp); p.append(lab);
 
   const rlab=el('label','upl repl');
-  rlab.innerHTML='<b>\u27F3 Replace all with new files</b> \u2014 clears every upload, negative and pair first';
+  rlab.innerHTML='<b>\u27F3 Replace all</b>';
   const rinp=document.createElement('input');
   rinp.type='file'; rinp.accept='.csv,text/csv'; rinp.multiple=true;
   rinp.addEventListener('change',e=>{
@@ -1190,7 +1201,6 @@ function renderFilesPane(){
     wipe.onclick=()=>{ if(confirm('Wipe everything, including the saved session on this device?')){ wipeAll(); recompute(); refreshAll(); toast('cleared'); } };
     p.append(wipe);
   }
-  p.append(Object.assign(el('div','note'),{textContent:'No sample data ships in this app \u2014 anything shown on load is your own previous session, restored from this device\u2019s storage. Everything runs on-device; exports download straight to your phone.'}));
 }
 async function handleFiles(files){
   let added=0, dupes=0;
